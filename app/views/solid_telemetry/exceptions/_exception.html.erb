@@ -1,0 +1,28 @@
+<dl class="divide-y divide-gray-100">
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%= SolidTelemetry::Exception.human_attribute_name :exception_class %></dt>
+    <dd class="w-4/5"><%= exception.exception_class %></dd>
+  </div>
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%= SolidTelemetry::Exception.human_attribute_name :message %></dt>
+    <dd class="w-4/5">
+      <div class="font-mono bg-gray-50 border p-2">
+        <%= exception.message %>
+      </div>
+    </dd>
+  </div>
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%=t ".first_occurrence" %></dt>
+    <dd class="w-4/5">
+      <%= exception.events.first.timestamp %>
+      <div class="text-gray-500"><%= distance_of_time_in_words_to_now exception.events.first.timestamp %> ago</div>
+    </dd>
+  </div>
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%=t ".last_occurrence" %></dt>
+    <dd class="w-4/5">
+      <%= exception.events.last.timestamp %>
+      <div class="text-gray-500"><%= distance_of_time_in_words_to_now exception.events.last.timestamp %> ago</div>
+    </dd>
+  </div>
+</dl>

@@ -1,0 +1,2 @@
+ignore:
+  - lib/generators/solid_telemetry/install/templates/migration.rb

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SolidTelemetry</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%= stylesheet_link_tag "solid_telemetry", "data-turbo-track": "reload", media: "all" %>
+    <%= javascript_importmap_tags importmap: SolidTelemetry.importmap %>
+  </head>
+  <body>
+    <main class="container mx-auto mt-28">
+      <%= render "flash" %>
+      <%= yield %>
+    </main>
+  </body>
+</html>

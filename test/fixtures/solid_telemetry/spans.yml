@@ -1,0 +1,39 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the "{}" from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+# one: {}
+# column: value
+#
+# two: {}
+# column: value
+
+span_1:
+  name: PostsController#index
+  kind: server
+  status:
+    code: 1
+    description: ""
+  total_recorded_attributes: 0
+  total_recorded_events: 0
+  total_recorded_links: 0
+  start_timestamp: <%= 10.minutes.ago %>
+  end_timestamp: <%= 10.minutes.ago + 0.5.seconds %>
+  span_attributes:
+    http.method: GET
+  resource:
+    attributes:
+      service.name: dummy
+  instrumentation_scope:
+    name: OpenTelemetry::Instrumentation::Rack
+  span_id: <%= SecureRandom.hex 8 %>
+  trace_id: <%= SecureRandom.hex %>
+  trace_flags:
+    flags: 1
+  tracestate:
+    hash: {}
+  duration: 0.5
+  exceptions:
+    - exception_1

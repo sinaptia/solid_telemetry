@@ -1,0 +1,24 @@
+<table class="min-w-full divide-y divide-gray-300">
+  <thead>
+    <tr>
+      <th class="text-left p-3"><%= SolidTelemetry::Event.human_attribute_name :name %></th>
+      <th class="text-left p-3"><%= SolidTelemetry::Event.human_attribute_name :trace_id %></th>
+      <th class="text-left p-3"><%= SolidTelemetry::Event.human_attribute_name :date %></th>
+    </tr>
+  </thead>
+  <tbody class="divide-y divide-gray-200">
+    <% events.each do |event| %>
+      <tr>
+        <td class="p-3">
+          <%= link_to event.span.name, event.span, class: "hover:underline font-semibold" %>
+          <div class="text-gray-500"><%= event.span.span_id %></div>
+        </td>
+        <td class="p-3"><%= event.span.trace_id %></td>
+        <td class="p-3">
+          <%= event.timestamp %>
+          <div class="text-gray-500"><%= distance_of_time_in_words_to_now event.timestamp %> ago</div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

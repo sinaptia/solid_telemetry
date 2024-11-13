@@ -1,0 +1,73 @@
+---
+en:
+  activerecord:
+    attributes:
+      solid_telemetry/event:
+        date: Date
+        name: Name
+        trace_id: Trace
+      solid_telemetry/exception:
+        exception_class: Exception class
+        message: Message
+      solid_telemetry/span:
+        duration: Duration
+        instrumentation_scope: Instrumentation scope
+        kind: Kind
+        name: Name
+        resource: Resource
+        span_attributes: Attributes
+        span_id: Span ID
+        start_timestamp: Start timestamp
+        trace_id: Trace ID
+  solid_telemetry:
+    application:
+      navigation:
+        exceptions: Exceptions
+        metrics: Metrics
+        traces: Traces
+    exceptions:
+      exception:
+        first_occurrence: First occurrence
+        last_occurrence: Last occurrence
+      index:
+        count: Count
+        last_occurrence: Last occurrence
+        no_exceptions: There are no exceptions yet.
+        resolve: Resolve this exception
+      resolve:
+        success: Exception was successfully resolved.
+      show:
+        occurrences: Occurrences
+    metrics:
+      filters:
+        filter: Filter
+      index:
+        cpu_usage:
+          max: CPU usage (max)
+          title: CPU usage
+        memory_usage:
+          memory_used: Memory used (max)
+          swap_memory: Swap memory (max)
+          title: Memory usage
+        response_time:
+          max: Response time (max)
+          title: Response time
+        throughput:
+          client_error: 4xx
+          redirection: 3xx
+          server_error: 5xx
+          successful: 2xx
+          title: Throughput
+    spans:
+      filters:
+        filter: Filter
+        query_placeholder: Search by name, trace id or span id
+      table:
+        no_spans: There are no spans yet.
+  views:
+    pagination:
+      first: "&laquo; First"
+      last: Last &raquo;
+      next: Next &rsaquo;
+      previous: "&lsaquo; Prev"
+      truncate: "&hellip;"

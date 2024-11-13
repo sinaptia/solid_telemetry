@@ -1,0 +1,32 @@
+<% if spans.any? %>
+  <table class="min-w-full divide-y divide-gray-300">
+    <thead>
+      <tr>
+        <th class="text-left p-3"><%= SolidTelemetry::Span.human_attribute_name :name %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::Span.human_attribute_name :trace_id %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::Span.human_attribute_name :kind %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::Span.human_attribute_name :start_timestamp %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::Span.human_attribute_name :duration %></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      <% spans.each do |span| %>
+        <tr>
+          <td class="p-3">
+            <%= link_to span.name, span, class: "hover:underline font-semibold" %>
+            <div class="text-gray-500"><%= span.span_id %></div>
+          </td>
+          <td class="p-3"><%= span.trace_id %></td>
+          <td class="p-3"><%= span.kind %></td>
+          <td class="p-3">
+            <%= span.start_timestamp %>
+            <div class="text-gray-500"><%= distance_of_time_in_words_to_now span.start_timestamp %> ago</div>
+          </td>
+          <td class="p-3"><%= span.duration.round 2 %>ms</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <%=t ".no_spans" %>
+<% end %>

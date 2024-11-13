@@ -1,0 +1,36 @@
+<%= render "navigation" %>
+
+<% if @exceptions.any? %>
+  <table class="min-w-full divide-y divide-gray-300">
+    <thead>
+      <tr>
+        <th class="text-left p-3"><%= SolidTelemetry::Exception.human_attribute_name :exception_class %></th>
+        <th class="text-left p-3"><%=t ".count" %></th>
+        <th class="text-left p-3"><%=t ".last_occurrence" %></th>
+        <th class="text-left p-3"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      <% @exceptions.each do |exception| %>
+        <tr>
+          <td class="p-3">
+            <%= link_to exception.exception_class, exception, class: "hover:underline font-semibold" %>
+            <div class="text-gray-500"><%= exception.message.truncate 128 %></div>
+          </td>
+          <td class="p-3"><%= exception.spans.count %></td>
+          <td class="p-3">
+            <%= exception.spans.last.start_timestamp %>
+            <div class="text-gray-500"><%= distance_of_time_in_words_to_now exception.spans.last.start_timestamp %> ago</div>
+          </td>
+          <td class="p-3">
+            <%= link_to t(".resolve"), resolve_exception_path(exception), class: "text-nowrap rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50", data: { "turbo-method": :put, confirm: "Are you sure?" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <%=t ".no_exceptions" %>
+<% end %>
+
+<%= paginate @exceptions %>

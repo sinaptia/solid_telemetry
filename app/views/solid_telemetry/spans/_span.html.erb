@@ -1,0 +1,25 @@
+<div class="border-l border-gray-300 pl-4">
+  <div data-controller="reveal" data-reveal-hidden-class="hidden" class="bg-gray-50">
+    <div class="flex border-l-2 p-2 <%= span.exceptions.any? ? "border-red-600" : "border-sky-600" %>">
+      <div class="flex-1">
+        <button data-action="click->reveal#toggle" type="button" class="hover:underline"><%= span.name %></button>
+      </div>
+      <div class="flex flex-col text-sm">
+        <div class="flex space-x-4">
+          <div><%= SolidTelemetry::Span.human_attribute_name :start_timestamp %>: <span class="font-bold"><%= span.start_timestamp.strftime("%Y-%m-%d %H:%M:%S.%N") %></span></div>
+          <div><%= SolidTelemetry::Span.human_attribute_name :duration %>: <span class="font-bold"><%= span.duration.round 2 %> ms</span></div>
+        </div>
+        <div class="text-right"><%= SolidTelemetry::Span.human_attribute_name :span_id %>: <span class="font-bold"><%= span.span_id %></span></div>
+      </div>
+    </div>
+    <div data-reveal-target="item" class="hidden p-2 space-y-4">
+      <%= render "attributes_table", title: SolidTelemetry::Span.human_attribute_name(:span_attributes), attributes: span.span_attributes.merge("span.kind" => span.kind) %>
+      <%= render "attributes_table", title: SolidTelemetry::Span.human_attribute_name(:resource), attributes: span.resource["attributes"] %>
+      <%= render "attributes_table", title: SolidTelemetry::Span.human_attribute_name(:instrumentation_scope), attributes: span.instrumentation_scope %>
+    </div>
+  </div>
+
+  <% if span.children.any? %>
+    <%= render span.children %>
+  <% end %>
+</div>

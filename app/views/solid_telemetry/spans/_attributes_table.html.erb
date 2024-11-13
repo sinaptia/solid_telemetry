@@ -1,0 +1,13 @@
+<div>
+  <div class="font-bold"><%= title %></div>
+  <table class="border w-full">
+    <tbody>
+      <% attributes.each do |k, v| %>
+        <tr class="odd:bg-white">
+          <th class="text-left py-1 pr-6 pl-2"><%= k %></th>
+          <td class="py-1 px-2"><%= v %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
