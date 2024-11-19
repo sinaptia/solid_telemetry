@@ -5,6 +5,10 @@ module SolidTelemetry
 
     after_create :create_exception_from_self, if: ->(event) { event.name == "exception" }
 
+    def relative_timestamp
+      (timestamp - span.start_timestamp).in_milliseconds
+    end
+
     private
 
     def create_exception_from_self

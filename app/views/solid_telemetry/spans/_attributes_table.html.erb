@@ -1,11 +1,14 @@
-<div>
-  <div class="font-bold"><%= title %></div>
-  <table class="border w-full">
+<div data-controller="reveal" data-reveal-hidden-class="hidden">
+  <button data-action="click->reveal#toggle" type="button" class="font-semibold">
+    <%= render "chevrons" %>
+    <%= title %>
+  </button>
+  <table data-reveal-target="item" class="hidden border w-full text-sm mt-2">
     <tbody>
       <% attributes.each do |k, v| %>
-        <tr class="odd:bg-white">
+        <tr class="odd:bg-white align-top">
           <th class="text-left py-1 pr-6 pl-2"><%= k %></th>
-          <td class="py-1 px-2"><%= v %></td>
+          <td class="py-1 px-2 block max-h-40 overflow-scroll"><%= v %></td>
         </tr>
       <% end %>
     </tbody>

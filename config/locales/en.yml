@@ -32,7 +32,7 @@ en:
       index:
         count: Count
         last_occurrence: Last occurrence
-        no_exceptions: There are no exceptions yet.
+        no_exceptions: There are no exceptions.
         resolve: Resolve this exception
       resolve:
         success: Exception was successfully resolved.
@@ -61,9 +61,18 @@ en:
     spans:
       filters:
         filter: Filter
-        query_placeholder: Search by name, trace id or span id
+      span:
+        exceptions: Exceptions
+        links: Links
+        occurred_at: Occurred at %{relative_timestamp} ms.
       table:
-        no_spans: There are no spans yet.
+        exceptions:
+          one: 1 exception
+          other: "%{count} exceptions"
+        no_spans: There are no spans.
+        spans:
+          one: 1 span
+          other: "%{count} spans"
   views:
     pagination:
       first: "&laquo; First"

@@ -3,7 +3,7 @@ module SolidTelemetry
     before_action :set_span, only: :show
 
     def index
-      @spans = apply_scopes(Span.traces).order(start_timestamp: :desc).page(params[:page])
+      @spans = apply_scopes(Span.roots).order(start_timestamp: :desc).page(params[:page])
     end
 
     def show
@@ -12,8 +12,8 @@ module SolidTelemetry
     private
 
     def apply_scopes(scope)
-      if params[:query].present?
-        scope = scope.search(params[:query])
+      if params[:name].present?
+        scope = scope.where(name: params[:name])
       end
 
       start_at = params[:start_at].try(:in_time_zone) || 2.hours.ago

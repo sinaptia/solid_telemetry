@@ -14,7 +14,13 @@
         <tr>
           <td class="p-3">
             <%= link_to span.name, span, class: "hover:underline font-semibold" %>
-            <div class="text-gray-500"><%= span.span_id %></div>
+            <span class="text-sm text-gray-500"><%= span.span_id %></span>
+            <div>
+              <%= badge :gray, t(".spans", count: SolidTelemetry::Span.where(trace_id: span.trace_id).count) %>
+              <% if span.events.any? %>
+                <%= badge :red, t(".exceptions", count: SolidTelemetry::Span.joins(:events).where(trace_id: span.trace_id).count) %>
+              <% end %>
+            </div>
           </td>
           <td class="p-3"><%= span.trace_id %></td>
           <td class="p-3"><%= span.kind %></td>

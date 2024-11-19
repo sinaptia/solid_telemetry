@@ -6,11 +6,6 @@
     <%= render @exception %>
   </div>
 
-  <div class="space-y-6">
-    <h2 class="font-bold text-xl">Backtrace</h2>
-    <pre class="font-mono bg-gray-50 border p-2"><%= @exception.events.order(timestamp: :desc).last.event_attributes["exception.stacktrace"] %></pre>
-  </div>
-
   <div class="">
     <h2 class="font-bold text-xl"><%=t ".occurrences" %></h2>
     <%= render "solid_telemetry/events/table", events: @exception.events.order(timestamp: :desc) %>

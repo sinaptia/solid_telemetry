@@ -1,25 +1,64 @@
-<div class="border-l border-gray-300 pl-4">
-  <div data-controller="reveal" data-reveal-hidden-class="hidden" class="bg-gray-50">
-    <div class="flex border-l-2 p-2 <%= span.exceptions.any? ? "border-red-600" : "border-sky-600" %>">
-      <div class="flex-1">
-        <button data-action="click->reveal#toggle" type="button" class="hover:underline"><%= span.name %></button>
-      </div>
-      <div class="flex flex-col text-sm">
-        <div class="flex space-x-4">
-          <div><%= SolidTelemetry::Span.human_attribute_name :start_timestamp %>: <span class="font-bold"><%= span.start_timestamp.strftime("%Y-%m-%d %H:%M:%S.%N") %></span></div>
-          <div><%= SolidTelemetry::Span.human_attribute_name :duration %>: <span class="font-bold"><%= span.duration.round 2 %> ms</span></div>
-        </div>
-        <div class="text-right"><%= SolidTelemetry::Span.human_attribute_name :span_id %>: <span class="font-bold"><%= span.span_id %></span></div>
-      </div>
+<div id="<%= span.span_id %>" class="flex divide-x" data-controller="reveal" data-reveal-hidden-class="hidden">
+  <div class="w-1/4 flex bg-gray-50 px-4">
+    <% span.level.times do |i| %>
+      <span class="pl-4 border-l border-gray-500"></span>
+    <% end %>
+    <div class="pl-4 border-l-4 border-sky-600 inline-block">
+      <button data-action="click->reveal#toggle" type="button" class="py-2">
+        <%= render "chevrons" %>
+        <%= span.name %>
+      </button>
+      <% if span.events.any? %>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-6 text-red-600">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+        </svg>
+      <% end %>
     </div>
-    <div data-reveal-target="item" class="hidden p-2 space-y-4">
+  </div>
+  <div class="w-3/4">
+    <div class="py-2">
+      <button data-action="click->reveal#toggle" type="button" class="mt-2 text-white h-2 bg-sky-600" style="width: <%= span_width span %>%; margin-left: <%= span_margin span %>%"></button>
+    </div>
+
+    <div data-reveal-target="item" class="hidden py-2 px-4 space-y-4 bg-gray-50 border-y">
+      <div class="flex justify-between items-center border-b pb-2">
+        <div class="font-bold">
+          <%= span.name %>
+        </div>
+        <div class="flex space-x-4 text-sm">
+          <div class="text-gray-500"><%= SolidTelemetry::Span.human_attribute_name :start_timestamp %>: <span class="text-black font-bold"><%= span.start_timestamp.strftime("%Y-%m-%d %H:%M:%S.%N") %></span></div>
+          <div class="text-gray-500"><%= SolidTelemetry::Span.human_attribute_name :duration %>: <span class="text-black font-bold"><%= span.duration.round 2 %> ms</span></div>
+          <div class="text-gray-500"><%= SolidTelemetry::Span.human_attribute_name :span_id %>: <span class="text-black font-bold"><%= span.span_id %></span></div>
+        </div>
+      </div>
+
       <%= render "attributes_table", title: SolidTelemetry::Span.human_attribute_name(:span_attributes), attributes: span.span_attributes.merge("span.kind" => span.kind) %>
       <%= render "attributes_table", title: SolidTelemetry::Span.human_attribute_name(:resource), attributes: span.resource["attributes"] %>
       <%= render "attributes_table", title: SolidTelemetry::Span.human_attribute_name(:instrumentation_scope), attributes: span.instrumentation_scope %>
+
+      <% if span.events.any? %>
+        <div class="space-y-2">
+          <div class="font-bold"><%=t ".exceptions" %></div>
+          <% span.events.each do |event| %>
+            <%= render "attributes_table", title: t(".occurred_at", relative_timestamp: event.relative_timestamp), attributes: event.event_attributes %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if span.links.any? %>
+        <div class="space-y-2">
+          <div class="font-bold"><%=t ".links" %></div>
+          <ul class="list-disc ml-8">
+            <% span.links.each do |link| %>
+              <li><%= link_to link.linked_span.name, span_path(link.linked_span.root, anchor: link.linked_span.span_id), class: "hover:underline" %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
     </div>
   </div>
-
-  <% if span.children.any? %>
-    <%= render span.children %>
-  <% end %>
 </div>
+
+<% span.children.order(:start_timestamp).each do |child| %>
+  <%= render child %>
+<% end %>

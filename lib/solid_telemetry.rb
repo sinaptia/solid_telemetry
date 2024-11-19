@@ -1,3 +1,4 @@
+require "acts_as_tree"
 require "importmap-rails"
 require "groupdate"
 require "opentelemetry-metrics-sdk"

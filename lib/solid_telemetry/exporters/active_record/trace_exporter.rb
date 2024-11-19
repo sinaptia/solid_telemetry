@@ -8,16 +8,18 @@ module SolidTelemetry
           return SUCCESS unless should_export?
 
           Rails.logger.silence do
-            Array(spans).each do |span_data|
+            Array(spans).sort { |a, b| a.start_timestamp <=> b.start_timestamp }.each do |span_data|
               OpenTelemetry::Common::Utilities.untraced do
                 start_timestamp = parse_timestamp span_data.start_timestamp
                 end_timestamp = parse_timestamp span_data.end_timestamp
+
+                parent_span_id = span_data.parent_span_id == OpenTelemetry::Trace::INVALID_SPAN_ID ? nil : span_data.hex_parent_span_id
 
                 span = Span.create(
                   name: span_data.name,
                   kind: span_data.kind,
                   status: span_data.status.as_json,
-                  parent_span_id: parse_hex_id(span_data.parent_span_id),
+                  parent_span_id: parent_span_id,
                   total_recorded_attributes: span_data.total_recorded_attributes,
                   total_recorded_events: span_data.total_recorded_events,
                   total_recorded_links: span_data.total_recorded_links,
@@ -27,8 +29,8 @@ module SolidTelemetry
                   span_attributes: span_data.attributes.as_json,
                   resource: span_data.resource.as_json,
                   instrumentation_scope: span_data.instrumentation_scope.as_json,
-                  span_id: parse_hex_id(span_data.span_id),
-                  trace_id: parse_hex_id(span_data.trace_id),
+                  span_id: span_data.hex_span_id,
+                  trace_id: span_data.hex_trace_id,
                   trace_flags: span_data.trace_flags.as_json,
                   tracestate: span_data.tracestate.as_json
                 )
@@ -41,7 +43,7 @@ module SolidTelemetry
                         if !v.is_a?(String)
                           v
                         else
-                          v.is_utf8? ? v : parse_hex_id(v)
+                          v.is_utf8? ? v : v.unpack1("H*")
                         end
                       }
                     )

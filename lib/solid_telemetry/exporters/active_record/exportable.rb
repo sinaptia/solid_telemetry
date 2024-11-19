@@ -9,27 +9,22 @@ module SolidTelemetry
 
         private_constant :SUCCESS, :FAILURE
 
-        def force_flush(timeout: nil)
+        def force_flush(timeout:)
           SUCCESS
         end
 
-        def shutdown(timeout: nil)
+        def shutdown(timeout:)
           SUCCESS
         end
 
         private
-
-        def parse_hex_id(id)
-          parsed_id = id.unpack1("H*")
-          (parsed_id == "0000000000000000") ? nil : parsed_id
-        end
 
         def parse_timestamp(timestamp)
           Time.at(timestamp.to_i / 1000000000.0)
         end
 
         def should_export?
-          defined? Rails::Server
+          !defined?(Rails::Console) && (!defined?(Rails::Command) || defined?(Rails::Server))
         end
       end
     end

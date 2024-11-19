@@ -10,7 +10,7 @@
     <% events.each do |event| %>
       <tr>
         <td class="p-3">
-          <%= link_to event.span.name, event.span, class: "hover:underline font-semibold" %>
+          <%= link_to event.span.name, span_path(event.span.root, anchor: event.span.span_id), class: "hover:underline font-semibold" %>
           <div class="text-gray-500"><%= event.span.span_id %></div>
         </td>
         <td class="p-3"><%= event.span.trace_id %></td>
