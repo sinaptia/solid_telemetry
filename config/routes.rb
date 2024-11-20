@@ -5,6 +5,7 @@ SolidTelemetry::Engine.routes.draw do
     end
   end
   resources :metrics, only: %i[index]
+  resources :performance_items, only: %i[index show]
   resources :spans, only: %i[index show]
 
   root to: "metrics#index"

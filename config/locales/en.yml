@@ -9,6 +9,10 @@ en:
       solid_telemetry/exception:
         exception_class: Exception class
         message: Message
+      solid_telemetry/performance_item:
+        impact: Impact
+        mean_duration: Mean duration
+        throughput: Throughput
       solid_telemetry/span:
         duration: Duration
         instrumentation_scope: Instrumentation scope
@@ -24,6 +28,7 @@ en:
       navigation:
         exceptions: Exceptions
         metrics: Metrics
+        performance: Performance
         traces: Traces
     exceptions:
       exception:
@@ -58,6 +63,11 @@ en:
           server_error: 5xx
           successful: 2xx
           title: Throughput
+    performance_items:
+      show:
+        slowest_traces: Slowest traces
+      table:
+        no_performance_items: No span performance insights.
     spans:
       filters:
         filter: Filter

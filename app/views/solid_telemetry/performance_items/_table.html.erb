@@ -1,0 +1,28 @@
+<% if performance_items.any? %>
+  <table class="min-w-full divide-y divide-gray-300">
+    <thead>
+      <tr>
+        <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :name %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :mean_duration %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :throughput %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :impact %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :error_rate %></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      <% performance_items.each do |performance_item| %>
+        <tr>
+          <td class="p-3">
+            <%= link_to performance_item.name, performance_item, class: "hover:underline font-semibold" %>
+          </td>
+          <td class="p-3"><%= performance_item.mean_duration.round 2 %> ms</td>
+          <td class="p-3"><%= performance_item.throughput %></td>
+          <td class="p-3"><%= performance_item.impact.round 2 %>%</td>
+          <td class="p-3"><%= performance_item.error_rate.round 2 %>%</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <%=t ".no_performance_items" %>
+<% end %>

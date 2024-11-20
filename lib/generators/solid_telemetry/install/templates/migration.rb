@@ -24,6 +24,15 @@ class CreateSolidTelemetryTables < ActiveRecord::Migration<%= migration_version 
       t.index :trace_id
     end
 
+    create_table :solid_telemetry_performance_items do |t|
+      t.string :name
+      t.decimal :mean_duration
+      t.integer :throughput
+      t.decimal :combined_duration
+
+      t.timestamps
+    end
+
     create_table :solid_telemetry_links do |t|
       t.references :solid_telemetry_span, null: false, foreign_key: true
       t.json :link_attributes

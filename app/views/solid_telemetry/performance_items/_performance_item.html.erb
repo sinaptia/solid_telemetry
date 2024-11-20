@@ -1,0 +1,18 @@
+<dl class="divide-y divide-gray-100">
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%= SolidTelemetry::PerformanceItem.human_attribute_name :mean_duration %></dt>
+    <dd class="w-4/5"><%= performance_item.mean_duration.round 2 %> ms</dd>
+  </div>
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%= SolidTelemetry::PerformanceItem.human_attribute_name :throughput %></dt>
+    <dd class="w-4/5"><%= performance_item.throughput %></dd>
+  </div>
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%= SolidTelemetry::PerformanceItem.human_attribute_name :impact %></dt>
+    <dd class="w-4/5"><%= performance_item.impact.round 2 %>%</dd>
+  </div>
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%= SolidTelemetry::PerformanceItem.human_attribute_name :error_rate %></dt>
+    <dd class="w-4/5"><%= performance_item.error_rate.round 2 %>%</dd>
+  </div>
+</dl>

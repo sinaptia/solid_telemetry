@@ -4,6 +4,9 @@ OpenTelemetry::SDK.configure do |config|
   config.service_name = Rails.application.name
   # enable all instrumentation
   config.use_all(
+    "OpenTelemetry::Instrumentation::ActiveJob" => {
+      span_naming: :job_class
+    },
     "OpenTelemetry::Instrumentation::Rack" => {
       untraced_requests: ->(env) {
         env["PATH_INFO"].starts_with?("/telemetry")
