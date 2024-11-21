@@ -3,11 +3,11 @@ module SolidTelemetry
     before_action :set_time_range
 
     def index
-      @max_memory = SolidTelemetry::Metric.memory_total.last.try(:data_points).try(:first).try(:[], "value").try(:kilobytes)
+      @max_memory = Metric.memory_total.last.try(:data_points).try(:first).try(:[], "value").try(:kilobytes)
 
-      @cpu_metrics = grouped_resource_metrics(:cpu).map { |k, v| [k.to_i.in_milliseconds, v.to_i] }
-      @memory_used_metrics = grouped_resource_metrics(:memory_used).map { |k, v| [k.to_i.in_milliseconds, v.to_i.kilobytes] }
-      @memory_swap_metrics = grouped_resource_metrics(:memory_swap).map { |k, v| [k.to_i.in_milliseconds, v.to_i.kilobytes] }
+      @cpu_metrics = grouped_resource_metrics(:cpu).map { |k, v| [k.to_i.in_milliseconds, v] }
+      @memory_used_metrics = grouped_resource_metrics(:memory_used).map { |k, v| [k.to_i.in_milliseconds, v.kilobytes] }
+      @memory_swap_metrics = grouped_resource_metrics(:memory_swap).map { |k, v| [k.to_i.in_milliseconds, v.kilobytes] }
 
       @response_time_metrics = grouped_http_metrics.maximum(:duration).map { |k, v| [k.to_i.in_milliseconds, v.to_f] }
 
@@ -31,11 +31,11 @@ module SolidTelemetry
     end
 
     def grouped_resource_metrics(kind)
-      SolidTelemetry::Metric.send(kind).where(time_unix_nano: @time_range).group_by_minute(:time_unix_nano).maximum("data_points->0->>'value'")
+      Metric.send(kind).where(time_unix_nano: @time_range).group_by_minute(:time_unix_nano).maximum(Metric.data_point_condition)
     end
 
     def grouped_http_metrics
-      SolidTelemetry::Span.roots.http.where(start_timestamp: @time_range).group_by_minute(:start_timestamp)
+      Span.roots.http.where(start_timestamp: @time_range).group_by_minute(:start_timestamp)
     end
   end
 end

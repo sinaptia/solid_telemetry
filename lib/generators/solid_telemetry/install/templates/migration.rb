@@ -18,6 +18,10 @@ class CreateSolidTelemetryTables < ActiveRecord::Migration<%= migration_version 
       t.json :trace_flags
       t.json :tracestate
       t.decimal :duration
+
+      t.index :parent_span_id
+      t.index :span_id
+      t.index :trace_id
     end
 
     create_table :solid_telemetry_links do |t|

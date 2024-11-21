@@ -8,12 +8,12 @@ module SolidTelemetry
           return SUCCESS unless should_export?
 
           Rails.logger.silence do
-            Array(spans).sort { |a, b| a.start_timestamp <=> b.start_timestamp }.each do |span_data|
+            Array(spans).sort_by(&:start_timestamp).each do |span_data|
               OpenTelemetry::Common::Utilities.untraced do
                 start_timestamp = parse_timestamp span_data.start_timestamp
                 end_timestamp = parse_timestamp span_data.end_timestamp
 
-                parent_span_id = span_data.parent_span_id == OpenTelemetry::Trace::INVALID_SPAN_ID ? nil : span_data.hex_parent_span_id
+                parent_span_id = (span_data.parent_span_id == OpenTelemetry::Trace::INVALID_SPAN_ID) ? nil : span_data.hex_parent_span_id
 
                 span = Span.create(
                   name: span_data.name,

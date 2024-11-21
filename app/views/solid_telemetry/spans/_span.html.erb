@@ -17,7 +17,7 @@
   </div>
   <div class="w-3/4">
     <div class="py-2">
-      <button data-action="click->reveal#toggle" type="button" class="mt-2 text-white h-2 bg-sky-600" style="width: <%= span_width span %>%; margin-left: <%= span_margin span %>%"></button>
+      <button data-action="click->reveal#toggle" type="button" class="mt-2 text-white h-2 bg-sky-600" style="width: <%= span_width span, root %>%; margin-left: <%= span_margin span, root %>%"></button>
     </div>
 
     <div data-reveal-target="item" class="hidden py-2 px-4 space-y-4 bg-gray-50 border-y">
@@ -58,7 +58,3 @@
     </div>
   </div>
 </div>
-
-<% span.children.order(:start_timestamp).each do |child| %>
-  <%= render child %>
-<% end %>

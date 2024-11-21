@@ -1,5 +1,5 @@
 <%= render "navigation" %>
 
-<div class="flex flex-col border mb-10">
-  <%= render @span %>
+<div class="flex flex-col border">
+  <%= render @span.self_and_descendants.includes(:events, :links).order(:start_timestamp), root: @span %>
 </div>
