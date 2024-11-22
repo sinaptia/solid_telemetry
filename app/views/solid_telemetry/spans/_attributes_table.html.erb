@@ -1,6 +1,7 @@
 <div data-controller="reveal" data-reveal-hidden-class="hidden">
   <button data-action="click->reveal#toggle" type="button" class="font-semibold">
-    <%= render "chevrons" %>
+    <%= image_tag "chevron-right.svg", class: "inline w-4", data: {"reveal-target" => "item"} %>
+    <%= image_tag "chevron-down.svg", class: "hidden inline w-4", data: {"reveal-target" => "item"} %>
     <%= title %>
   </button>
   <table data-reveal-target="item" class="hidden border w-full text-sm mt-2">

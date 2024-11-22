@@ -5,7 +5,8 @@
     <% end %>
     <div class="pl-4 border-l-4 border-sky-600 inline-block">
       <button data-action="click->reveal#toggle" type="button" class="py-2">
-        <%= render "chevrons" %>
+        <%= image_tag "chevron-right.svg", class: "inline w-4", data: {"reveal-target" => "item"} %>
+        <%= image_tag "chevron-down.svg", class: "hidden inline w-4", data: {"reveal-target" => "item"} %>
         <%= span.name %>
       </button>
       <% if span.events.any? %>

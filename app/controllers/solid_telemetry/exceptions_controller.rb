@@ -11,7 +11,7 @@ module SolidTelemetry
 
     def resolve
       @exception.resolve
-      redirect_to exceptions_path, success: t(".success")
+      redirect_to exceptions_path, notice: t(".success")
     end
 
     private
