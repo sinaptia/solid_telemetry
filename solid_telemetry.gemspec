@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "acts_as_tree"
   spec.add_dependency "groupdate"
-  spec.add_dependency "importmap-rails", "~> 1.2"
+  spec.add_dependency "importmap-rails", ">= 1.2", "< 3.0"
   spec.add_dependency "kaminari"
   spec.add_dependency "opentelemetry-sdk", ">= 1.5"
   spec.add_dependency "opentelemetry-metrics-sdk", ">= 0.2"
