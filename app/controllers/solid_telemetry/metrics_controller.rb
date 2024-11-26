@@ -6,8 +6,8 @@ module SolidTelemetry
       @max_memory = Metric.memory_total.last.try(:data_points).try(:first).try(:[], "value").try(:kilobytes)
 
       @cpu_metrics = grouped_resource_metrics(:cpu).map { |k, v| [k.to_i.in_milliseconds, v] }
-      @memory_used_metrics = grouped_resource_metrics(:memory_used).map { |k, v| [k.to_i.in_milliseconds, v.kilobytes] }
-      @memory_swap_metrics = grouped_resource_metrics(:memory_swap).map { |k, v| [k.to_i.in_milliseconds, v.kilobytes] }
+      @memory_used_metrics = grouped_resource_metrics(:memory_used).map { |k, v| [k.to_i.in_milliseconds, v&.kilobytes] }
+      @memory_swap_metrics = grouped_resource_metrics(:memory_swap).map { |k, v| [k.to_i.in_milliseconds, v&.kilobytes] }
 
       @response_time_metrics = grouped_http_metrics.maximum(:duration).map { |k, v| [k.to_i.in_milliseconds, v.to_f] }
 

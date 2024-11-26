@@ -57,6 +57,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_13_021446) do
     t.datetime "time_unix_nano"
   end
 
+  create_table "solid_telemetry_performance_items", force: :cascade do |t|
+    t.string "name"
+    t.decimal "mean_duration"
+    t.integer "throughput"
+    t.decimal "combined_duration"
+    t.decimal "impact"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "solid_telemetry_spans", force: :cascade do |t|
     t.string "name"
     t.string "kind"

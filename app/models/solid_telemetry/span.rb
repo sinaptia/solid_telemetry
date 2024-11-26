@@ -6,6 +6,8 @@ module SolidTelemetry
     has_many :events, foreign_key: :solid_telemetry_span_id, dependent: :destroy
     has_many :links, foreign_key: :solid_telemetry_span_id, dependent: :destroy
 
+    after_create :update_performance_item, if: -> { _1.parent_span_id.blank? && ["OpenTelemetry::Instrumentation::Rack", "OpenTelemetry::Instrumentation::ActiveJob"].include?(_1.instrumentation_scope["name"]) }
+
     scope :http, -> { where http_condition }
 
     scope :http_status_code, ->(status_code) { where http_status_code_condition, status_code }
@@ -63,6 +65,18 @@ module SolidTelemetry
           self.class.joins("JOIN search_tree ON #{self.class.table_name}.parent_span_id = search_tree.span_id")
         ]
       ).select(:span_id).from("search_tree")
+    end
+
+    private
+
+    def update_performance_item
+      performance_item = PerformanceItem.find_or_initialize_by name: name
+
+      spans = Span.where name: name
+
+      combined_duration = spans.sum :duration
+
+      performance_item.update mean_duration: combined_duration / spans.count, throughput: spans.count, combined_duration: combined_duration
     end
   end
 end
