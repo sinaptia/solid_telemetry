@@ -1,3 +1,4 @@
+require "active_median"
 require "acts_as_tree"
 require "importmap-rails"
 require "groupdate"

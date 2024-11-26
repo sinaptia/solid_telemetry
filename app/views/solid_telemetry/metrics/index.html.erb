@@ -8,10 +8,7 @@
     data-title="<%=t ".cpu_usage.title" %>"
     data-min="<%= @start_at.to_i.in_milliseconds %>"
     data-formatter="percentage"
-    data-series="<%= [{
-      name: "#{t ".cpu_usage.max"}",
-      data: @cpu_metrics
-    }].to_json %>"
+    data-series="<%= @cpu_series.to_json %>"
   >
   </div>
 
@@ -25,13 +22,7 @@
       color: "#fa4b42",
       width: 2
     }].to_json %>"
-    data-series="<%= [{
-      name: "#{t ".memory_usage.memory_used"}",
-      data: @memory_used_metrics,
-    }, {
-      name: "#{t ".memory_usage.swap_memory"}",
-      data: @memory_swap_metrics
-    }].to_json %>"
+    data-series="<%= @memory_series.to_json %>"
   >
   </div>
 
@@ -40,10 +31,7 @@
     data-title="<%=t ".response_time.title" %>"
     data-min="<%= @start_at.to_i.in_milliseconds %>"
     data-formatter="ms"
-    data-series="<%= [{
-      name: "#{t ".response_time.max"}",
-      data: @response_time_metrics
-    }].to_json %>"
+    data-series="<%= @response_time_series.to_json %>"
   >
   </div>
 
@@ -51,19 +39,7 @@
     data-controller="chart"
     data-title="<%=t ".throughput.title" %>"
     data-min="<%= @start_at.to_i.in_milliseconds %>"
-    data-series="<%= [{
-      name: "#{t ".throughput.successful"}",
-      data: @successful_http_metrics
-    }, {
-      name: "#{t ".throughput.redirection"}",
-      data: @redirection_http_metrics
-    }, {
-      name: "#{t ".throughput.client_error"}",
-      data: @client_error_http_metrics
-    }, {
-      name: "#{t ".throughput.server_error"}",
-      data: @server_error_http_metrics
-    }].to_json %>"
+    data-series="<%= @throughput_series.to_json %>"
   >
   </div>
 </div>

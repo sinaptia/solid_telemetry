@@ -3,9 +3,11 @@
     <thead>
       <tr>
         <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :name %></th>
-        <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :mean_duration %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :p50_duration %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :p95_duration %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :p99_duration %></th>
         <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :throughput %></th>
-        <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :impact %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :impact_score %></th>
         <th class="text-left p-3"><%= SolidTelemetry::PerformanceItem.human_attribute_name :error_rate %></th>
       </tr>
     </thead>
@@ -15,9 +17,11 @@
           <td class="p-3">
             <%= link_to performance_item.name, performance_item, class: "hover:underline font-semibold" %>
           </td>
-          <td class="p-3"><%= performance_item.mean_duration.round 2 %> ms</td>
+          <td class="p-3"><%= performance_item.p50_duration.round 2 %> ms</td>
+          <td class="p-3"><%= performance_item.p95_duration.round 2 %> ms</td>
+          <td class="p-3"><%= performance_item.p99_duration.round 2 %> ms</td>
           <td class="p-3"><%= performance_item.throughput %></td>
-          <td class="p-3"><%= performance_item.impact.round 2 %>%</td>
+          <td class="p-3"><%= performance_item.impact_score.round 2 %></td>
           <td class="p-3"><%= performance_item.error_rate.round 2 %>%</td>
         </tr>
       <% end %>

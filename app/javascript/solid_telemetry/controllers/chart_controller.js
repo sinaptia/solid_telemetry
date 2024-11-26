@@ -25,7 +25,6 @@ export default class extends Controller {
         x: 30
       },
       credits: { enabled: false },
-      legend: { enabled: false },
       xAxis: {
         type: "datetime",
         crosshair: true,

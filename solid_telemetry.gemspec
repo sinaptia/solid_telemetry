@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   end
 
+  spec.add_dependency "active_median"
   spec.add_dependency "acts_as_tree"
   spec.add_dependency "groupdate"
   spec.add_dependency "importmap-rails", ">= 1.2", "< 3.0"

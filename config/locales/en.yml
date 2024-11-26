@@ -10,8 +10,11 @@ en:
         exception_class: Exception class
         message: Message
       solid_telemetry/performance_item:
-        impact: Impact
-        mean_duration: Mean duration
+        error_rate: Error rate
+        impact_score: Impact score
+        p50_duration: Duration (P50)
+        p95_duration: Duration (P95)
+        p99_duration: Duration (P99)
         throughput: Throughput
       solid_telemetry/span:
         duration: Duration
@@ -55,7 +58,9 @@ en:
           swap_memory: Swap memory (max)
           title: Memory usage
         response_time:
-          max: Response time (max)
+          p50: P50
+          p95: P95
+          p99: P99
           title: Response time
         throughput:
           client_error: 4xx

@@ -3,7 +3,7 @@ module SolidTelemetry
     before_action :set_performance_item, only: [:show]
 
     def index
-      @performance_items = PerformanceItem.order(mean_duration: :desc).page params[:page]
+      @performance_items = PerformanceItem.order(impact_score: :desc).page params[:page]
     end
 
     def show

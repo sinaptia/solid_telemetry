@@ -26,9 +26,13 @@ class CreateSolidTelemetryTables < ActiveRecord::Migration<%= migration_version 
 
     create_table :solid_telemetry_performance_items do |t|
       t.string :name
-      t.decimal :mean_duration
+      t.decimal :p50_duration
+      t.decimal :p95_duration
+      t.decimal :p99_duration
+      t.decimal :p100_duration
       t.integer :throughput
-      t.decimal :combined_duration
+      t.decimal :impact_score
+      t.decimal :error_rate
 
       t.timestamps
     end

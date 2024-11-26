@@ -6,7 +6,7 @@ module SolidTelemetry
     has_many :events, foreign_key: :solid_telemetry_span_id, dependent: :destroy
     has_many :links, foreign_key: :solid_telemetry_span_id, dependent: :destroy
 
-    after_create :update_performance_item, if: -> { _1.parent_span_id.blank? && ["OpenTelemetry::Instrumentation::Rack", "OpenTelemetry::Instrumentation::ActiveJob"].include?(_1.instrumentation_scope["name"]) }
+    after_create :touch_performance_item, if: -> { _1.parent_span_id.blank? && ["OpenTelemetry::Instrumentation::Rack", "OpenTelemetry::Instrumentation::ActiveJob"].include?(_1.instrumentation_scope["name"]) }
 
     scope :http, -> { where http_condition }
 
@@ -69,14 +69,8 @@ module SolidTelemetry
 
     private
 
-    def update_performance_item
-      performance_item = PerformanceItem.find_or_initialize_by name: name
-
-      spans = Span.where name: name
-
-      combined_duration = spans.sum :duration
-
-      performance_item.update mean_duration: combined_duration / spans.count, throughput: spans.count, combined_duration: combined_duration
+    def touch_performance_item
+      PerformanceItem.find_or_create_by(name: name).touch
     end
   end
 end
