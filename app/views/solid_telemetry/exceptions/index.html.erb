@@ -4,9 +4,9 @@
   <table class="min-w-full divide-y divide-gray-300">
     <thead>
       <tr>
-        <th class="text-left p-3"><%= SolidTelemetry::Exception.human_attribute_name :exception_class %></th>
+        <th class="text-left p-3"><%= sort_link :exception_class, SolidTelemetry::Exception.human_attribute_name(:exception_class) %></th>
         <th class="text-left p-3"><%=t ".count" %></th>
-        <th class="text-left p-3"><%=t ".last_occurrence" %></th>
+        <th class="text-left p-3"><%= sort_link :updated_at, t(".last_occurrence") %></th>
         <th class="text-left p-3"></th>
       </tr>
     </thead>

@@ -12,5 +12,17 @@ module SolidTelemetry
       # pink: bg-pink-50 text-pink-700 ring-pink-600/10
       content_tag :span, text, class: "inline-flex items-center rounded-md bg-#{color}-50 px-2 py-1 text-xs font-medium text-#{color}-700 ring-1 ring-inset ring-#{color}-600/10"
     end
+
+    def sort_link(column, title)
+      direction = column.to_s == sort_column && sort_direction == "asc" ? "desc" : "asc"
+
+      link_to({sort: column, direction: direction}, class: "space-x-2") do
+        concat content_tag :span, title
+
+        if column.to_s == sort_column
+          concat image_tag("chevron-#{sort_direction == "asc" ? "up" : "down" }.svg", class: "inline w-4")
+        end
+      end
+    end
   end
 end

@@ -2,11 +2,11 @@
   <table class="min-w-full divide-y divide-gray-300">
     <thead>
       <tr>
-        <th class="text-left p-3"><%= SolidTelemetry::Span.human_attribute_name :name %></th>
-        <th class="text-left p-3"><%= SolidTelemetry::Span.human_attribute_name :trace_id %></th>
-        <th class="text-left p-3"><%= SolidTelemetry::Span.human_attribute_name :kind %></th>
-        <th class="text-left p-3"><%= SolidTelemetry::Span.human_attribute_name :start_timestamp %></th>
-        <th class="text-left p-3"><%= SolidTelemetry::Span.human_attribute_name :duration %></th>
+        <th class="text-left p-3"><%= sort_link :name, SolidTelemetry::Span.human_attribute_name(:name) %></th>
+        <th class="text-left p-3"><%= sort_link :trace_id, SolidTelemetry::Span.human_attribute_name(:trace_id) %></th>
+        <th class="text-left p-3"><%= sort_link :kind, SolidTelemetry::Span.human_attribute_name(:kind) %></th>
+        <th class="text-left p-3"><%= sort_link :start_timestamp, SolidTelemetry::Span.human_attribute_name(:start_timestamp) %></th>
+        <th class="text-left p-3"><%= sort_link :duration, SolidTelemetry::Span.human_attribute_name(:duration) %></th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200">

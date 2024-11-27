@@ -1,9 +1,11 @@
 module SolidTelemetry
   class SpansController < ApplicationController
+    include Sortable
+
     before_action :set_span, only: :show
 
     def index
-      @spans = apply_scopes(Span.roots).order(start_timestamp: :desc).page(params[:page])
+      @spans = apply_scopes(Span.roots).order(sort_column => sort_direction).page(params[:page])
     end
 
     def show
@@ -20,6 +22,10 @@ module SolidTelemetry
       end_at = params[:end_at].try(:in_time_zone)
 
       scope.where(start_timestamp: start_at..end_at)
+    end
+
+    def default_sort_column
+      "start_timestamp"
     end
 
     def set_span
