@@ -16,7 +16,7 @@ module SolidTelemetry
     def sort_link(column, title)
       direction = (column.to_s == sort_column && sort_direction == "asc") ? "desc" : "asc"
 
-      link_to({sort: column, direction: direction}, class: "space-x-2") do
+      link_to({sort: column, direction: direction, **filter_param}, class: "space-x-2") do
         concat content_tag :span, title
 
         if column.to_s == sort_column

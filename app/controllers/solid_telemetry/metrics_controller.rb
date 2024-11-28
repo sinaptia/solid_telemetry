@@ -36,23 +36,27 @@ module SolidTelemetry
 
     private
 
-    def set_min
-      @min = @time_range.first.to_i.in_milliseconds
+    def filter_param
+      {filter: {start_at: @start_at, end_at: @end_at}}
     end
 
-    def set_time_range
-      @start_at = params[:start_at].try(:in_time_zone) || 2.hours.ago
-      @end_at = params[:end_at].try(:in_time_zone)
-
-      @time_range = @start_at..@end_at
+    def grouped_http_metrics
+      Span.roots.http.where(start_timestamp: @time_range).group_by_minute(:start_timestamp)
     end
 
     def grouped_resource_metrics(kind)
       Metric.send(kind).where(time_unix_nano: @time_range).group_by_minute(:time_unix_nano).maximum(Metric.data_point_condition)
     end
 
-    def grouped_http_metrics
-      Span.roots.http.where(start_timestamp: @time_range).group_by_minute(:start_timestamp)
+    def set_min
+      @min = @time_range.first.to_i.in_milliseconds
+    end
+
+    def set_time_range
+      @start_at = params.dig(:filter, :start_at).try(:in_time_zone) || 2.hours.ago
+      @end_at = params.dig(:filter, :end_at).try(:in_time_zone)
+
+      @time_range = @start_at..@end_at
     end
   end
 end

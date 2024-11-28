@@ -2,10 +2,11 @@ module SolidTelemetry
   class SpansController < ApplicationController
     include Sortable
 
+    before_action :set_filters, only: :index
     before_action :set_span, only: :show
 
     def index
-      @spans = apply_scopes(Span.roots).order(sort_column => sort_direction).page(params[:page])
+      @spans = Span.roots.where(**@filters).order(sort_column => sort_direction).page(params[:page])
     end
 
     def show
@@ -13,19 +14,19 @@ module SolidTelemetry
 
     private
 
-    def apply_scopes(scope)
-      if params[:name].present?
-        scope = scope.where(name: params[:name])
-      end
-
-      start_at = params[:start_at].try(:in_time_zone) || 2.hours.ago
-      end_at = params[:end_at].try(:in_time_zone)
-
-      scope.where(start_timestamp: start_at..end_at)
-    end
-
     def default_sort_column
       "start_timestamp"
+    end
+
+    def filter_param
+      {filter: @filters}
+    end
+
+    def set_filters
+      @filters = {
+        name: params.dig(:filter, :name).presence,
+        start_timestamp: (params.dig(:filter, :start_at).try(:in_time_zone)..params.dig(:filter, :end_at).try(:in_time_zone)).presence
+      }.compact
     end
 
     def set_span
