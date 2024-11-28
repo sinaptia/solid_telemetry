@@ -14,13 +14,13 @@ module SolidTelemetry
     end
 
     def sort_link(column, title)
-      direction = column.to_s == sort_column && sort_direction == "asc" ? "desc" : "asc"
+      direction = (column.to_s == sort_column && sort_direction == "asc") ? "desc" : "asc"
 
       link_to({sort: column, direction: direction}, class: "space-x-2") do
         concat content_tag :span, title
 
         if column.to_s == sort_column
-          concat image_tag("chevron-#{sort_direction == "asc" ? "up" : "down" }.svg", class: "inline w-4")
+          concat image_tag("chevron-#{(sort_direction == "asc") ? "up" : "down"}.svg", class: "inline w-4")
         end
       end
     end
