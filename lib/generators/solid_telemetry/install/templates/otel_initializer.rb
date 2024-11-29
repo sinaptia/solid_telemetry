@@ -7,6 +7,9 @@ OpenTelemetry::SDK.configure do |config|
     "OpenTelemetry::Instrumentation::ActiveJob" => {
       span_naming: :job_class
     },
+    "OpenTelemetry::Instrumentation::ActionPack" => {
+      span_naming: :class
+    },
     "OpenTelemetry::Instrumentation::Rack" => {
       untraced_requests: ->(env) {
         env["PATH_INFO"].starts_with?("/telemetry")

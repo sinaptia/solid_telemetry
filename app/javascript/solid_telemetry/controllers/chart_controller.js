@@ -36,6 +36,7 @@ export default class extends Controller {
       yAxis: {
         title: { text: null },
         labels: { enabled: false },
+        allowDecimals: true,
         plotLines: this.plotLines
       },
       tooltip: {
@@ -44,7 +45,6 @@ export default class extends Controller {
       },
       plotOptions: {
         area: {
-          stacking: "normal",
           marker: {
             enabled: false,
             symbol: "circle",
