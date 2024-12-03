@@ -11,6 +11,8 @@ OpenTelemetry::SDK.configure do |config|
       span_naming: :class
     },
     "OpenTelemetry::Instrumentation::Rack" => {
+      # we don't want traces coming out of solid_telemetry's controllers
+      # if you mount the engine other than /telemetry, make sure you update this block
       untraced_requests: ->(env) {
         env["PATH_INFO"].starts_with?("/telemetry")
       }
