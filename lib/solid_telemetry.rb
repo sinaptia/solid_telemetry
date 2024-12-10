@@ -1,9 +1,9 @@
 require "active_median"
-require "acts_as_tree"
 require "importmap-rails"
 require "groupdate"
 require "opentelemetry-metrics-sdk"
 require "opentelemetry-sdk"
+require "with_recursive_tree"
 
 require "solid_telemetry/version"
 require "solid_telemetry/engine"

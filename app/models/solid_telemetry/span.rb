@@ -1,6 +1,6 @@
 module SolidTelemetry
   class Span < ApplicationRecord
-    acts_as_tree primary_key: :span_id, foreign_key: :parent_span_id
+    with_recursive_tree primary_key: :span_id, foreign_key: :parent_span_id, order: :start_timestamp
 
     has_and_belongs_to_many :exceptions, foreign_key: :solid_telemetry_span_id, association_foreign_key: :solid_telemetry_exception_id
     has_many :events, foreign_key: :solid_telemetry_span_id, dependent: :destroy
@@ -30,41 +30,6 @@ module SolidTelemetry
       elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
         "(span_attributes->'$.\"http.status_code\"') LIKE ?"
       end
-    end
-
-    # TODO: remove after https://github.com/amerine/acts_as_tree/pull/97 is released
-    def ancestors
-      self_and_ancestors.excluding self
-    end
-
-    # TODO: remove after https://github.com/amerine/acts_as_tree/pull/97 is released
-    def descendants
-      self_and_descendants.excluding self
-    end
-
-    # TODO: remove after https://github.com/amerine/acts_as_tree/pull/97 is released
-    def root
-      self_and_ancestors.find_by parent_span_id: nil
-    end
-
-    # TODO: remove after https://github.com/amerine/acts_as_tree/pull/97 is released
-    def self_and_ancestors
-      self.class.where span_id: self.class.with_recursive(
-        search_tree: [
-          self.class.where(span_id: span_id),
-          self.class.joins("JOIN search_tree ON #{self.class.table_name}.span_id = search_tree.parent_span_id")
-        ]
-      ).select(:span_id).from("search_tree")
-    end
-
-    # TODO: remove after https://github.com/amerine/acts_as_tree/pull/97 is released
-    def self_and_descendants
-      self.class.where span_id: self.class.with_recursive(
-        search_tree: [
-          self.class.where(span_id: span_id),
-          self.class.joins("JOIN search_tree ON #{self.class.table_name}.parent_span_id = search_tree.span_id")
-        ]
-      ).select(:span_id).from("search_tree")
     end
 
     private

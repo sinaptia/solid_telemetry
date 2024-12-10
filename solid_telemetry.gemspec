@@ -17,7 +17,6 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_dependency "active_median"
-  spec.add_dependency "acts_as_tree"
   spec.add_dependency "groupdate"
   spec.add_dependency "importmap-rails", ">= 1.2", "< 3.0"
   spec.add_dependency "kaminari"
@@ -28,4 +27,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "stimulus-rails"
   spec.add_dependency "tailwindcss-rails", "~> 3.0"
   spec.add_dependency "turbo-rails"
+  spec.add_dependency "with_recursive_tree"
 end
