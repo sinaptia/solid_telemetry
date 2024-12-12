@@ -26,20 +26,24 @@
   >
   </div>
 
-  <div
-    data-controller="chart"
-    data-title="<%=t ".response_time.title" %>"
-    data-min="<%= @start_at.to_i.in_milliseconds %>"
-    data-formatter="ms"
-    data-series="<%= @response_time_series.to_json %>"
-  >
-  </div>
+  <% if has_data?(@response_time_series) %>
+    <div
+      data-controller="chart"
+      data-title="<%=t ".response_time.title" %>"
+      data-min="<%= @start_at.to_i.in_milliseconds %>"
+      data-formatter="ms"
+      data-series="<%= @response_time_series.to_json %>"
+    >
+    </div>
+  <% end %>
 
-  <div
-    data-controller="chart"
-    data-title="<%=t ".throughput.title" %>"
-    data-min="<%= @start_at.to_i.in_milliseconds %>"
-    data-series="<%= @throughput_series.to_json %>"
-  >
-  </div>
+  <% if has_data?(@throughput_series) %>
+    <div
+      data-controller="chart"
+      data-title="<%=t ".throughput.title" %>"
+      data-min="<%= @start_at.to_i.in_milliseconds %>"
+      data-series="<%= @throughput_series.to_json %>"
+    >
+    </div>
+  <% end %>
 </div>

@@ -9,7 +9,7 @@ module SolidTelemetry
         end
 
         def export(metrics, timeout: nil)
-          return SUCCESS unless should_export?
+          return SUCCESS unless SolidTelemetry.enabled?
 
           Rails.logger.silence do
             Array(metrics).each do |metric_data|

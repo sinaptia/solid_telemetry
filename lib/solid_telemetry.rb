@@ -33,4 +33,8 @@ module SolidTelemetry
   config_accessor :base_controller_class, default: "ApplicationController"
   config_accessor :connects_to
   config_accessor :importmap, default: Importmap::Map.new
+
+  def self.enabled?
+    !defined?(Rails::Console) && (!defined?(Rails::Command) || defined?(Rails::Server))
+  end
 end

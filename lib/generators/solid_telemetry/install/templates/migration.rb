@@ -1,5 +1,11 @@
 class CreateSolidTelemetryTables < ActiveRecord::Migration<%= migration_version %>
   def change
+    create_table :solid_telemetry_hosts do |t|
+      t.string :name
+
+      t.timestamps
+    end
+
     create_table :solid_telemetry_spans do |t|
       t.string :name
       t.string :kind

@@ -5,7 +5,7 @@ module SolidTelemetry
         include Exportable
 
         def export(spans, timeout: nil)
-          return SUCCESS unless should_export?
+          return SUCCESS unless SolidTelemetry.enabled?
 
           Rails.logger.silence do
             Array(spans).sort_by(&:start_timestamp).each do |span_data|
