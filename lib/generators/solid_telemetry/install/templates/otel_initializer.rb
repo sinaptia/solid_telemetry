@@ -1,4 +1,5 @@
 require "opentelemetry-instrumentation-all"
+require "solid_telemetry/instrumentation/action_pack"
 
 OpenTelemetry::SDK.configure do |config|
   # By default, there's only one service with the name of the app. If you need
@@ -16,12 +17,16 @@ OpenTelemetry::SDK.configure do |config|
       span_naming: :class
     },
     "OpenTelemetry::Instrumentation::Rack" => {
+      allowed_request_headers: Rack::Headers::KNOWN_HEADERS.keys,
+      allowed_response_headers: Rack::Headers::KNOWN_HEADERS.keys,
       # we don't want traces coming out of solid_telemetry's controllers
       # if you mount the engine other than /telemetry, make sure you update this block
       untraced_requests: ->(env) {
         env["PATH_INFO"].starts_with?("/telemetry")
       }
-    }
+    },
+    # Custom ActionPack instrumentation:
+    "SolidTelemetry::Instrumentation::ActionPack" => {}
   )
 
   config.resource = OpenTelemetry::SDK::Resources::Resource.create(

@@ -4,12 +4,12 @@
     <%= image_tag "chevron-down.svg", class: "hidden inline w-4", data: {"reveal-target" => "item"} %>
     <%= title %>
   </button>
-  <table data-reveal-target="item" class="hidden border w-full text-sm mt-2">
+  <table data-reveal-target="item" class="hidden w-full mt-2 text-sm border">
     <tbody>
       <% attributes.each do |k, v| %>
-        <tr class="odd:bg-white align-top">
-          <th class="text-left py-1 pr-6 pl-2"><%= k %></th>
-          <td class="py-1 px-2 block max-h-40 overflow-scroll"><%= v %></td>
+        <tr class="align-top odd:bg-white">
+          <th class="py-1 pl-2 pr-6 text-left"><%= k %></th>
+          <td class="block px-2 py-1 overflow-scroll break-all max-h-40 text-wrap"><%= v %></td>
         </tr>
       <% end %>
     </tbody>

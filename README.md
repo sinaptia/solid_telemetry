@@ -73,6 +73,13 @@ SolidTelemetry.configure do |config|
 end
 ```
 
+## Custom instrumentation
+
+SolidTelemetry comes with custom ActionPack instrumentation (`SolidTelemetry::Instrumentation::ActionPack`, based on `OpenTelemetry::Instrumentation::ActionPack`) that provides detailed information about the current request and session, to help users with debugging:
+
+* `rack.session`
+* `action_dispatch.request.parameters`
+
 ## Advanced configuration
 
 By default, the SolidTelemetry tables are created in your app's primary database. Since SolidTelemetry collects a lot of data, you might want to use another database for it. To do so, you need to add your telemetry database in `config/database.yml`:
