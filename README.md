@@ -94,6 +94,12 @@ Then, move the `XXX_create_solid_telemetry_tables.rb` migration from `db/migrate
 config.solid_telemetry.connects_to = { database: { writing: :telemetry }}
 ```
 
+## Compatibility
+
+SolidTelemetry is compatible with Postgres version 13 and above, MySQL version 8 and above and SQLite3 version 3.34 and above due to the use of Common Table Expressions (through [with_recursive_tree](https://github.com/sinaptia/with_recursive_tree)).
+
+SolidTelemetry depends on [active_median](https://github.com/ankane/active_median), which requires an extension to work with MySQL. Check out [active_median](https://github.com/ankane/active_median)'s instructions to set it up.
+
 ## Contributing
 
 You can open an issue or a PR in GitHub.

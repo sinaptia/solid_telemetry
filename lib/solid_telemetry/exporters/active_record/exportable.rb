@@ -22,10 +22,6 @@ module SolidTelemetry
         def parse_timestamp(timestamp)
           Time.at(timestamp.to_i / 1000000000.0)
         end
-
-        def should_export?
-          !defined?(Rails::Console) && (!defined?(Rails::Command) || defined?(Rails::Server))
-        end
       end
     end
   end

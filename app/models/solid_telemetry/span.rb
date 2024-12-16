@@ -1,5 +1,7 @@
 module SolidTelemetry
   class Span < ApplicationRecord
+    include HostScoped
+
     with_recursive_tree primary_key: :span_id, foreign_key: :parent_span_id, order: :start_timestamp
 
     has_and_belongs_to_many :exceptions, foreign_key: :solid_telemetry_span_id, association_foreign_key: :solid_telemetry_exception_id

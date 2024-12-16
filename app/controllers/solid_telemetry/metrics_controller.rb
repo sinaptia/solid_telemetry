@@ -1,5 +1,6 @@
 module SolidTelemetry
   class MetricsController < ApplicationController
+    before_action :set_host
     before_action :set_time_range
 
     def index
@@ -37,19 +38,19 @@ module SolidTelemetry
     private
 
     def filter_param
-      {filter: {start_at: @start_at, end_at: @end_at}}
+      {filter: {host_id: @host.id, start_at: @start_at, end_at: @end_at}}
     end
 
     def grouped_http_metrics
-      Span.roots.http.where(start_timestamp: @time_range).group_by_minute(:start_timestamp)
+      Span.by_host(@host.name).roots.http.where(start_timestamp: @time_range).group_by_minute(:start_timestamp)
     end
 
     def grouped_resource_metrics(kind)
-      Metric.send(kind).where(time_unix_nano: @time_range).group_by_minute(:time_unix_nano).maximum(Metric.data_point_condition)
+      Metric.by_host(@host.name).send(kind).where(time_unix_nano: @time_range).group_by_minute(:time_unix_nano).maximum(Metric.data_point_condition)
     end
 
-    def set_min
-      @min = @time_range.first.to_i.in_milliseconds
+    def set_host
+      @host = Host.find_by(id: params.dig(:filter, :host_id)) || Host.first
     end
 
     def set_time_range

@@ -11,6 +11,12 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.2].define(version: 2024_11_13_021446) do
+  create_table :solid_telemetry_hosts do |t|
+    t.string :name
+
+    t.timestamps
+  end
+
   create_table :solid_telemetry_spans do |t|
     t.string :name
     t.string :kind
