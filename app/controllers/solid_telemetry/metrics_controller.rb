@@ -46,7 +46,7 @@ module SolidTelemetry
     end
 
     def grouped_resource_metrics(kind)
-      Metric.by_host(@host.name).send(kind).where(time_unix_nano: @time_range).group_by_minute(:time_unix_nano).maximum(Metric.data_point_condition)
+      Metric.by_host(@host.name).send(kind).group_by_minute(:time_unix_nano, range: @time_range).maximum(:value)
     end
 
     def set_host

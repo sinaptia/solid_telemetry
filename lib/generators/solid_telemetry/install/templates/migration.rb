@@ -25,6 +25,33 @@ class CreateSolidTelemetryTables < ActiveRecord::Migration<%= migration_version 
       t.json :tracestate
       t.decimal :duration
 
+      as_hostname = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+        "resource#>>'{attributes,host.name}'"
+      elsif defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
+        "resource->>'attributes'->>'host.name'"
+      elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
+        "JSON_VALUE(resource, '$.attributes.\"host.name\"')"
+      end
+
+      as_http = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) || defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
+        "span_attributes->>'http.method' IS NOT NULL"
+      elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
+        "span_attributes->'$.\"http.method\"' IS NOT NULL"
+      end
+
+      as_http_status_code = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) || defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
+        "span_attributes->>'http.status_code'"
+      elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
+        "span_attributes->'$.\"http.status_code\"'"
+      end
+
+      t.virtual :hostname, type: :string, as: as_hostname, stored: true
+      t.virtual :http, type: :boolean, as: as_http, stored: true
+      t.virtual :http_status_code, type: :string, as: as_http_status_code, stored: true
+
+      t.index :hostname
+      t.index :http
+      t.index :http_status_code
       t.index :parent_span_id
       t.index :span_id
       t.index :trace_id
@@ -60,6 +87,25 @@ class CreateSolidTelemetryTables < ActiveRecord::Migration<%= migration_version 
       t.string :aggregation_temporality
       t.datetime :start_time_unix_nano
       t.datetime :time_unix_nano
+
+      as_hostname = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+        "resource#>>'{attributes,host.name}'"
+      elsif defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
+        "resource->>'attributes'->>'host.name'"
+      elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
+        "JSON_VALUE(resource, '$.attributes.\"host.name\"')"
+      end
+
+      as_value = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+        "(data_points->0->>'value')::FLOAT"
+      elsif defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
+        "data_points->0->>'value'"
+      elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
+        "JSON_VALUE(data_points, '$[0].value' RETURNING FLOAT)"
+      end
+
+      t.virtual :hostname, type: :string, as: as_hostname, stored: true
+      t.virtual :value, type: :float, as: as_value, stored: true
     end
 
     create_table :solid_telemetry_exceptions do |t|
