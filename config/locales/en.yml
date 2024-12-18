@@ -49,6 +49,7 @@ en:
     metrics:
       filters:
         filter: Filter
+        resolution: "%{resolution} resolution"
       index:
         cpu_usage:
           max: CPU usage (max)
