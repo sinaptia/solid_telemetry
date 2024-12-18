@@ -54,6 +54,7 @@ en:
           max: CPU usage (max)
           title: CPU usage
         memory_usage:
+          max_memory: Memory (max)
           memory_used: Memory used (max)
           swap_memory: Swap memory (max)
           title: Memory usage

@@ -18,9 +18,15 @@
     data-min="<%= @start_at.to_i.in_milliseconds %>"
     data-formatter="size"
     data-annotations="<%= [{
-      value: @max_memory,
-      color: "#fa4b42",
-      width: 2
+      y: @max_memory,
+      borderColor: "#dc2626",
+      label: {
+        text: t(".memory_usage.max_memory"),
+        style: {
+          background: "#dc2626",
+          color: "#ffffff"
+        }
+      }
     }].to_json %>"
     data-series="<%= @memory_series.to_json %>"
   >
