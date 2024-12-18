@@ -5,113 +5,77 @@ export default class extends Controller {
     this.title = this.element.dataset.title
     this.min = parseInt(this.element.dataset.min)
     this.series = JSON.parse(this.element.dataset.series)
-    this.plotLines = this.element.dataset.annotations ? JSON.parse(this.element.dataset.annotations) : []
+    this.annotations = this.element.dataset.annotations ? JSON.parse(this.element.dataset.annotations) : []
     this.formatter = this.element.dataset.formatter
   }
 
   connect() {
-    Highcharts.chart(this.element, {
+    const chart = new ApexCharts(this.element, {
+      annotations: {
+        yaxis: this.annotations
+      },
       chart: {
+        id: this.title,
+        group: "metrics",
         height: "200px",
         type: "area",
-        zooming: { type: "x" },
-        events: {
-          selection: this.resetZoom()
-        }
-      },
-      title: {
-        text: this.title,
-        align: "left",
-        x: 30
-      },
-      credits: { enabled: false },
-      xAxis: {
-        type: "datetime",
-        crosshair: true,
-        min: this.min,
-        events: {
-          setExtremes: this.syncExtremes()
-        }
-      },
-      yAxis: {
-        title: { text: null },
-        labels: { enabled: false },
-        allowDecimals: true,
-        plotLines: this.plotLines
-      },
-      tooltip: {
-        shared: true,
-        pointFormatter: this.formatterFunction()
-      },
-      plotOptions: {
-        area: {
-          marker: {
-            enabled: false,
-            symbol: "circle",
-            radius: 2,
-            states: {
-              hover: { enabled: true }
-            }
+        toolbar: {
+          tools: {
+            download: false
           }
         }
       },
-      series: this.series
+      colors: ["#3b82f6", "#4ade80", "#facc15", "#dc2626", "#7c3aed"],
+      dataLabels: {
+        enabled: false
+      },
+      series: this.series,
+      title: {
+        text: this.title
+      },
+      tooltip: {
+        x: {
+          format: "dd/MM/yyyy HH:mm:ss"
+        },
+        y: {
+          formatter: this.formatterFunction()
+        }
+      },
+      xaxis: {
+        type: "datetime",
+        min: this.min
+      },
+      yaxis: {
+        labels: { show: false }
+      }
     })
+
+    chart.render()
   }
 
   formatterFunction() {
-    let f = function() {
-      return `<span style="color: ${this.color}">●</span> ${this.series.name}: <b>${this.y}</b><br/>`
+    let f = function(value) {
+      return value
     }
 
     if (this.formatter === "percentage") {
-      f = function() {
-        return `<span style="color: ${this.color}">●</span> ${this.series.name}: <b>${this.y}%</b><br/>`
+      f = function(value) {
+        return `${value}%`
       }
     }
 
     if (this.formatter === "size") {
-      f = function() {
-        return `<span style="color: ${this.color}">●</span> ${this.series.name}: <b>${byteSize(this.y)}</b><br/>`
+      f = function(value) {
+        return byteSize(value)
       }
     }
 
     if (this.formatter === "ms") {
-      f = function() {
-        return `<span style="color: ${this.color}">●</span> ${this.series.name}: <b>${this.y.toFixed(2)} ms</b><br/>`
+      f = function(value) {
+        return `${value.toFixed(2)} ms`
       }
     }
 
     return f
-  }
-
-  resetZoom() {
-    return function(e) {
-      if (e.resetSelection) {
-        return
-      }
-
-      Highcharts.charts.forEach(chart => {
-        if (chart !== e.target) {
-          chart.zoomOut()
-        }
-      })
-    }
-  }
-
-  syncExtremes() {
-    return function(e) {
-      const thisChart = this.chart;
-
-      if (e.trigger !== "syncExtremes") {
-        Highcharts.charts.forEach(chart => {
-          if (chart !== thisChart) {
-            if (chart.xAxis[0].setExtremes) {
-              chart.xAxis[0].setExtremes(e.min, e.max, undefined, false, { trigger: "syncExtremes" })
-            }
-          }
-        })
-      }
-    }
   }
 }

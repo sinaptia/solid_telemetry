@@ -1,8 +1,8 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-import Highcharts from "highcharts"
-window.Highcharts = Highcharts
+import ApexCharts from "apexcharts"
+window.ApexCharts = ApexCharts
 
 import byteSize from "byte-size"
 window.byteSize = byteSize
