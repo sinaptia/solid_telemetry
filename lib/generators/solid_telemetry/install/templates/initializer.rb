@@ -3,5 +3,5 @@ SolidTelemetry.configure do |config|
   # config.agent_interval = 5.seconds
 
   # controller base class
-  # config.base_controller_class
+  # config.base_controller_class = AdminController
 end
