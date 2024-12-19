@@ -51,6 +51,10 @@ en:
         filter: Filter
         resolution: "%{resolution} resolution"
       index:
+        active_job_throughput:
+          failed: Failed
+          successful: Successful
+          title: ActiveJob throughput
         cpu_usage:
           max: CPU usage (max)
           title: CPU usage

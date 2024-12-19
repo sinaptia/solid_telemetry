@@ -18,21 +18,27 @@ module SolidTelemetry
       }]
 
       @response_time_series = [{
-        name: t(".response_time.p50"), data: grouped_http_metrics.percentile(:duration, 0.5).map { |k, v| [k.to_i.in_milliseconds, v.to_f] }
+        name: t(".response_time.p50"), data: grouped_rack_metrics.percentile(:duration, 0.5).map { |k, v| [k.to_i.in_milliseconds, v.to_f] }
       }, {
-        name: t(".response_time.p95"), data: grouped_http_metrics.percentile(:duration, 0.95).map { |k, v| [k.to_i.in_milliseconds, v.to_f] }
+        name: t(".response_time.p95"), data: grouped_rack_metrics.percentile(:duration, 0.95).map { |k, v| [k.to_i.in_milliseconds, v.to_f] }
       }, {
-        name: t(".response_time.p99"), data: grouped_http_metrics.percentile(:duration, 0.99).map { |k, v| [k.to_i.in_milliseconds, v.to_f] }
+        name: t(".response_time.p99"), data: grouped_rack_metrics.percentile(:duration, 0.99).map { |k, v| [k.to_i.in_milliseconds, v.to_f] }
       }]
 
       @throughput_series = [{
-        name: t(".throughput.successful"), data: grouped_http_metrics.successful.count.map { |k, v| [k.to_i.in_milliseconds, v] }
+        name: t(".throughput.successful"), data: grouped_rack_metrics.successful.count.map { |k, v| [k.to_i.in_milliseconds, v] }
       }, {
-        name: t(".throughput.redirection"), data: grouped_http_metrics.redirection.count.map { |k, v| [k.to_i.in_milliseconds, v] }
+        name: t(".throughput.redirection"), data: grouped_rack_metrics.redirection.count.map { |k, v| [k.to_i.in_milliseconds, v] }
       }, {
-        name: t(".throughput.client_error"), data: grouped_http_metrics.client_error.count.map { |k, v| [k.to_i.in_milliseconds, v] }
+        name: t(".throughput.client_error"), data: grouped_rack_metrics.client_error.count.map { |k, v| [k.to_i.in_milliseconds, v] }
       }, {
-        name: t(".throughput.server_error"), data: grouped_http_metrics.server_error.count.map { |k, v| [k.to_i.in_milliseconds, v] }
+        name: t(".throughput.server_error"), data: grouped_rack_metrics.server_error.count.map { |k, v| [k.to_i.in_milliseconds, v] }
+      }]
+
+      @active_job_throughput_series = [{
+        name: t(".active_job_throughput.successful"), data: grouped_active_job_metrics.where(total_recorded_events: 0).count.map { |k, v| [k.to_i.in_milliseconds, v] }
+      }, {
+        name: t(".active_job_throughput.failed"), data: grouped_active_job_metrics.where.not(total_recorded_events: 0).count.map { |k, v| [k.to_i.in_milliseconds, v] }
       }]
     end
 
@@ -42,8 +48,12 @@ module SolidTelemetry
       {filter: {host_id: @host.id, start_at: @start_at, end_at: @end_at}}
     end
 
-    def grouped_http_metrics
-      Span.by_host(@host.name).roots.http.where(start_timestamp: @time_range).group_by_minute(:start_timestamp, n: @resolution.in_minutes.to_i)
+    def grouped_active_job_metrics
+      Span.by_host(@host.name).roots.active_job.where(start_timestamp: @time_range).group_by_minute(:start_timestamp, n: @resolution.in_minutes.to_i)
+    end
+
+    def grouped_rack_metrics
+      Span.by_host(@host.name).roots.rack.where(start_timestamp: @time_range).group_by_minute(:start_timestamp, n: @resolution.in_minutes.to_i)
     end
 
     def grouped_resource_metrics(kind)

@@ -33,10 +33,10 @@ class CreateSolidTelemetryTables < ActiveRecord::Migration<%= migration_version 
         "JSON_VALUE(resource, '$.attributes.\"host.name\"')"
       end
 
-      as_http = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) || defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
-        "span_attributes->>'http.method' IS NOT NULL"
+      as_instrumentation_scope_name = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) || defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
+        "instrumentation_scope->>'name'"
       elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
-        "span_attributes->'$.\"http.method\"' IS NOT NULL"
+        "instrumentation_scope->'$.\"name\"'"
       end
 
       as_http_status_code = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) || defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
@@ -46,12 +46,12 @@ class CreateSolidTelemetryTables < ActiveRecord::Migration<%= migration_version 
       end
 
       t.virtual :hostname, type: :string, as: as_hostname, stored: true
-      t.virtual :http, type: :boolean, as: as_http, stored: true
       t.virtual :http_status_code, type: :string, as: as_http_status_code, stored: true
+      t.virtual :instrumentation_scope_name, type: :string, as: as_instrumentation_scope_name, stored: true
 
       t.index :hostname
-      t.index :http
       t.index :http_status_code
+      t.index :instrumentation_scope_name
       t.index :name
       t.index :parent_span_id
       t.index :span_id

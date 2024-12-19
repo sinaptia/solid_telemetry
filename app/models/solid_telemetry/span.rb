@@ -10,7 +10,8 @@ module SolidTelemetry
 
     after_create :touch_performance_item, if: -> { _1.root? && ["OpenTelemetry::Instrumentation::Rack", "OpenTelemetry::Instrumentation::ActiveJob"].include?(_1.instrumentation_scope["name"]) }
 
-    scope :http, -> { where http: true }
+    scope :active_job, -> { where instrumentation_scope_name: "OpenTelemetry::Instrumentation::ActiveJob" }
+    scope :rack, -> { where instrumentation_scope_name: "OpenTelemetry::Instrumentation::Rack" }
 
     scope :successful, -> { where "http_status_code LIKE ?", "2%" }
     scope :redirection, -> { where "http_status_code LIKE ?", "3%" }

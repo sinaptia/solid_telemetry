@@ -52,4 +52,14 @@
     >
     </div>
   <% end %>
+
+  <% if has_data?(@active_job_throughput_series) %>
+    <div
+      data-controller="chart"
+      data-title="<%=t ".active_job_throughput.title" %>"
+      data-min="<%= @start_at.to_i.in_milliseconds %>"
+      data-series="<%= @active_job_throughput_series.to_json %>"
+    >
+    </div>
+  <% end %>
 </div>

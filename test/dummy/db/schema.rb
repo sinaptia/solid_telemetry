@@ -97,11 +97,11 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_13_021446) do
     t.json "tracestate"
     t.decimal "duration"
     t.virtual "hostname", type: :string, as: "resource->>'attributes'->>'host.name'", stored: true
-    t.virtual "http", type: :boolean, as: "span_attributes->>'http.method' IS NOT NULL", stored: true
     t.virtual "http_status_code", type: :string, as: "span_attributes->>'http.status_code'", stored: true
+    t.virtual "instrumentation_scope_name", type: :string, as: "instrumentation_scope->>'name'", stored: true
     t.index ["hostname"], name: "index_solid_telemetry_spans_on_hostname"
-    t.index ["http"], name: "index_solid_telemetry_spans_on_http"
     t.index ["http_status_code"], name: "index_solid_telemetry_spans_on_http_status_code"
+    t.index ["instrumentation_scope_name"], name: "index_solid_telemetry_spans_on_instrumentation_scope_name"
     t.index ["name"], name: "index_solid_telemetry_spans_on_name"
     t.index ["parent_span_id"], name: "index_solid_telemetry_spans_on_parent_span_id"
     t.index ["span_id"], name: "index_solid_telemetry_spans_on_span_id"
