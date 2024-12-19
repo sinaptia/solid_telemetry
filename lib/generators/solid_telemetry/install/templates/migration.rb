@@ -52,6 +52,7 @@ class CreateSolidTelemetryTables < ActiveRecord::Migration<%= migration_version 
       t.index :hostname
       t.index :http
       t.index :http_status_code
+      t.index :name
       t.index :parent_span_id
       t.index :span_id
       t.index :trace_id

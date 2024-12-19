@@ -71,6 +71,7 @@ en:
           title: Throughput
     performance_items:
       show:
+        show_all: Show all
         slowest_traces: Slowest traces
       table:
         no_performance_items: No span performance insights.

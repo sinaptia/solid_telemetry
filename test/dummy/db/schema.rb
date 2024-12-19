@@ -102,6 +102,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_13_021446) do
     t.index ["hostname"], name: "index_solid_telemetry_spans_on_hostname"
     t.index ["http"], name: "index_solid_telemetry_spans_on_http"
     t.index ["http_status_code"], name: "index_solid_telemetry_spans_on_http_status_code"
+    t.index ["name"], name: "index_solid_telemetry_spans_on_name"
     t.index ["parent_span_id"], name: "index_solid_telemetry_spans_on_parent_span_id"
     t.index ["span_id"], name: "index_solid_telemetry_spans_on_span_id"
     t.index ["trace_id"], name: "index_solid_telemetry_spans_on_trace_id"
