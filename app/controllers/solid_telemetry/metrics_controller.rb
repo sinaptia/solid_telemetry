@@ -2,6 +2,7 @@ module SolidTelemetry
   class MetricsController < ApplicationController
     before_action :set_host
     before_action :set_time_range
+    before_action :set_resolution
 
     def index
       @max_memory = Metric.memory_total.last.try(:data_points).try(:first).try(:[], "value").try(:kilobytes)
@@ -42,15 +43,27 @@ module SolidTelemetry
     end
 
     def grouped_http_metrics
-      Span.by_host(@host.name).roots.http.where(start_timestamp: @time_range).group_by_minute(:start_timestamp)
+      Span.by_host(@host.name).roots.http.where(start_timestamp: @time_range).group_by_minute(:start_timestamp, n: @resolution.in_minutes.to_i)
     end
 
     def grouped_resource_metrics(kind)
-      Metric.by_host(@host.name).send(kind).group_by_minute(:time_unix_nano, range: @time_range).maximum(:value)
+      Metric.by_host(@host.name).send(kind).group_by_minute(:time_unix_nano, range: @time_range, n: @resolution.in_minutes.to_i).maximum(:value)
     end
 
     def set_host
       @host = Host.find_by(id: params.dig(:filter, :host_id)) || Host.first
+    end
+
+    def set_resolution
+      duration = ActiveSupport::Duration.build (@end_at || Time.current) - @start_at
+
+      @resolution = if duration < 6.hours
+        1.minute
+      elsif duration < 24.hours
+        10.minute
+      else
+        1.hour
+      end
     end
 
     def set_time_range
