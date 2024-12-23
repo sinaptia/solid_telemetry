@@ -49,7 +49,6 @@ en:
     metrics:
       filters:
         filter: Filter
-        resolution: "%{resolution} resolution"
       index:
         active_job_throughput:
           failed: Failed

@@ -45,7 +45,7 @@ module SolidTelemetry
     private
 
     def filter_param
-      {filter: {host_id: @host.id, start_at: @start_at, end_at: @end_at}}
+      {filter: {host_id: @host.id, start_at: @start_at, end_at: @end_at, resolution: @resolution}}
     end
 
     def grouped_active_job_metrics
@@ -57,6 +57,7 @@ module SolidTelemetry
     end
 
     def grouped_resource_metrics(kind)
+      # raise @resolution.to_i.inspect
       Metric.by_host(@host.name).send(kind).group_by_minute(:time_unix_nano, range: @time_range, n: @resolution.in_minutes.to_i).maximum(:value)
     end
 
@@ -65,15 +66,7 @@ module SolidTelemetry
     end
 
     def set_resolution
-      duration = ActiveSupport::Duration.build (@end_at || Time.current) - @start_at
-
-      @resolution = if duration < 6.hours
-        1.minute
-      elsif duration < 24.hours
-        10.minute
-      else
-        1.hour
-      end
+      @resolution = params.dig(:filter, :resolution).try(:to_i).try(:minutes) || 1.minute
     end
 
     def set_time_range

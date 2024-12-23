@@ -60,7 +60,7 @@ export default class extends Controller {
 
     if (this.formatter === "percentage") {
       f = function(value) {
-        return `${value}%`
+        return `${value || 0}%`
       }
     }
 
