@@ -10,7 +10,7 @@ module SolidTelemetry
     end
 
     test "should get show" do
-      get span_url(solid_telemetry_spans(:span_1))
+      get span_url(solid_telemetry_spans(:posts))
       assert_response :success
     end
   end

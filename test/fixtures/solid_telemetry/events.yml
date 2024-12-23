@@ -10,11 +10,22 @@
 # two: {}
 # column: value
 
-event_1:
+unresolved_exception_event:
   name: exception
   event_attributes:
     exception.type: RuntimeError
     exception.message: This is an exception
+    exception.stacktrace: "doesn't\nmatter"
   timestamp: <%= 10.minutes.ago %>
-  span: span_1
-  exception: exception_1
+  span: posts
+  exception: unresolved_exception
+
+resolved_exception_event:
+  name: exception
+  event_attributes:
+    exception.type: NoMethodError
+    exception.message: This is an exception
+    exception.stacktrace: "doesn't\nmatter"
+  timestamp: <%= 5.minutes.ago %>
+  span: posts
+  exception: resolved_exception

@@ -10,7 +10,7 @@ module SolidTelemetry
     end
 
     test "should get show" do
-      get performance_item_url(solid_telemetry_performance_items(:performance_item_1))
+      get performance_item_url(solid_telemetry_performance_items(:posts_span))
       assert_response :success
     end
   end

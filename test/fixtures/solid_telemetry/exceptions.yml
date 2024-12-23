@@ -10,7 +10,13 @@
 # two: {}
 # column: value
 
-exception_1:
+unresolved_exception:
   exception_class: RuntimeError
   message: "This is an exception"
-  fingerprint: <%= Digest::SHA256.hexdigest "" %>
+  fingerprint: <%= Digest::SHA256.hexdigest ["RuntimeError", "This is an exception", "doesn't"].join %>
+
+resolved_exception:
+  exception_class: NoMethodError
+  message: "This is an exception"
+  fingerprint: <%= Digest::SHA256.hexdigest ["NoMethodError", "This is an exception", "doesn't"].join %>
+  resolved_at: <%= 1.minute.ago %>

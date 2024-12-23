@@ -1,6 +1,6 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-performance_item_1:
+posts_span:
   name: PostsController#index
   p50_duration: 500.0
   p95_duration: 1200.0

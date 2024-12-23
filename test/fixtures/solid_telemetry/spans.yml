@@ -10,7 +10,7 @@
 # two: {}
 # column: value
 
-span_1:
+posts:
   name: PostsController#index
   kind: server
   status:
@@ -36,4 +36,4 @@ span_1:
     hash: {}
   duration: 0.5
   exceptions:
-    - exception_1
+    - unresolved_exception
