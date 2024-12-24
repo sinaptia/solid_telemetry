@@ -6,7 +6,10 @@ OpenTelemetry is an observability framework and toolkit designed to manage telem
 
 This means that if you want to add telemetry to your app, you need a third-party tool like Jaeger and/or Prometheus. This is not always desirable, so we built SolidTelemetry to provide an OpenTelemetry backend for Ruby on Rails apps, solid-style.
 
-By installing SolidTelemetry, you'll get [metrics](https://opentelemetry.io/docs/concepts/signals/metrics/) (unstable) and [traces](https://opentelemetry.io/docs/concepts/signals/traces/) (stable), provided by [opentelemetry-ruby](https://github.com/open-telemetry/opentelemetry-ruby) (more features coming soon), and error-reporting on top of traces.
+By installing SolidTelemetry, you'll get [metrics](https://opentelemetry.io/docs/concepts/signals/metrics/) (unstable) and [traces](https://opentelemetry.io/docs/concepts/signals/traces/) (stable), provided by [opentelemetry-ruby](https://github.com/open-telemetry/opentelemetry-ruby), and extra features on top of traces provided by SolidTelemetry:
+
+* Error tracking: track, debug and resolve errors from OpenTelemetry traces.
+* Performance items: track and debug performance issues from OpenTelemetry traces.
 
 Using OpenTelemetry brings a big advantage: if for any reasons SolidTelemetry falls short for your use case, your app is already instrumented to use another backend, you only need to point to your new OpenTelemetry backend.
 
@@ -73,14 +76,7 @@ SolidTelemetry.configure do |config|
 end
 ```
 
-## Custom instrumentation
-
-SolidTelemetry comes with custom ActionPack instrumentation (`SolidTelemetry::Instrumentation::ActionPack`, based on `OpenTelemetry::Instrumentation::ActionPack`) that provides detailed information about the current request and session, to help users with debugging:
-
-* `rack.session`
-* `action_dispatch.request.parameters`
-
-## Advanced configuration
+### Advanced configuration
 
 By default, the SolidTelemetry tables are created in your app's primary database. Since SolidTelemetry collects a lot of data, you might want to use another database for it. To do so, you need to add your telemetry database in `config/database.yml`:
 
@@ -100,6 +96,13 @@ Then, move the `XXX_create_solid_telemetry_tables.rb` migration from `db/migrate
 ```ruby
 config.solid_telemetry.connects_to = { database: { writing: :telemetry }}
 ```
+
+## Custom instrumentation
+
+SolidTelemetry comes with custom ActionPack instrumentation (`SolidTelemetry::Instrumentation::ActionPack`, based on `OpenTelemetry::Instrumentation::ActionPack`) that provides detailed session and request information (if applicable), to help users with debugging:
+
+* `rack.session`
+* `action_dispatch.request.parameters`
 
 ## Compatibility
 
