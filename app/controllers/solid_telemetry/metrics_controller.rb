@@ -57,7 +57,6 @@ module SolidTelemetry
     end
 
     def grouped_resource_metrics(kind)
-      # raise @resolution.to_i.inspect
       Metric.by_host(@host.name).send(kind).group_by_minute(:time_unix_nano, range: @time_range, n: @resolution.in_minutes.to_i).maximum(:value)
     end
 

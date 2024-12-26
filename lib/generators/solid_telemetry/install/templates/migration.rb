@@ -123,7 +123,7 @@ class CreateSolidTelemetryTables < ActiveRecord::Migration<%= migration_version 
       t.json :event_attributes
       t.datetime :timestamp
       t.references :solid_telemetry_span, null: false, foreign_key: true
-      t.references :solid_telemetry_exception, null: true, foreign_key: true
+      t.references :solid_telemetry_exception, foreign_key: true
     end
 
     create_join_table :solid_telemetry_exceptions, :solid_telemetry_spans do |t|

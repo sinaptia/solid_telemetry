@@ -1,10 +1,8 @@
 module SolidTelemetry
   class PerformanceItem < ApplicationRecord
-    after_touch :recalculate_metrics
+    has_many :spans, foreign_key: :name, primary_key: :name
 
-    def spans
-      @spans ||= Span.where name: name
-    end
+    after_touch :recalculate_metrics
 
     private
 
