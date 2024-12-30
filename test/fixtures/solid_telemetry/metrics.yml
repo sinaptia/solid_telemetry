@@ -9,3 +9,9 @@
 #
 # two: {}
 # column: value
+
+cpu_metric:
+  name: cpu
+  data_points:
+    - value: 50.0
+  time_unix_nano: <%= 31.days.ago %>

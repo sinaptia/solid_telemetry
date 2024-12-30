@@ -20,6 +20,16 @@ unresolved_exception_event:
   span: posts
   exception: unresolved_exception
 
+old_unresolved_exception_event:
+  name: exception
+  event_attributes:
+    exception.type: RuntimeError
+    exception.message: This is an exception
+    exception.stacktrace: "doesn't\nmatter"
+  timestamp: <%= 31.days.ago %>
+  span: old_span
+  exception: old_unresolved_exception
+
 resolved_exception_event:
   name: exception
   event_attributes:

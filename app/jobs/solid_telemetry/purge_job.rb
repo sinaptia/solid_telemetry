@@ -1,0 +1,23 @@
+module SolidTelemetry
+  class PurgeJob < ApplicationJob
+    queue_as :default
+
+    # Purges events, links, spans and metrics older than *time_ago*.
+    # It deletes all performance items that don't have associated spans and updates those who still do.
+    def perform(time_ago = 30.days.ago)
+      SolidTelemetry::Event.joins(:span).where("solid_telemetry_spans.start_timestamp < ?", time_ago).delete_all
+      SolidTelemetry::Link.joins(:span).where("solid_telemetry_spans.start_timestamp < ?", time_ago).delete_all
+      SolidTelemetry::Span.where("start_timestamp < ?", time_ago).delete_all
+
+      SolidTelemetry::Metric.where("time_unix_nano < ?", time_ago).delete_all
+
+      SolidTelemetry::PerformanceItem.find_each do |item|
+        if item.spans.any?
+          item.touch
+        else
+          item.destroy
+        end
+      end
+    end
+  end
+end

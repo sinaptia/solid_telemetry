@@ -15,6 +15,11 @@ unresolved_exception:
   message: "This is an exception"
   fingerprint: <%= Digest::SHA256.hexdigest ["RuntimeError", "This is an exception", "doesn't"].join %>
 
+old_unresolved_exception:
+  exception_class: RuntimeError
+  message: "This is an exception"
+  fingerprint: <%= Digest::SHA256.hexdigest ["RuntimeError", "This is an exception", "doesn't"].join %>
+
 resolved_exception:
   exception_class: NoMethodError
   message: "This is an exception"
