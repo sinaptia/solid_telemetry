@@ -30,6 +30,9 @@ export default class extends Controller {
         enabled: false
       },
       series: this.series,
+      stroke: {
+        width: 1
+      },
       title: {
         text: this.title
       },
