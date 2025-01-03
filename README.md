@@ -108,6 +108,23 @@ SolidTelemetry comes with custom ActionPack instrumentation (`SolidTelemetry::In
 
 *Note*: `gc.*` data is bound to the current process. This means `gc.allocations` includes the objects allocated by OpenTelemetry (exporter, spans, metrics, etc.), and `gc.time` includes the time spent its garbage collection. So, when looking at the data, you should consider these factors.
 
+## Data retention
+
+By default, SolidTelemetry collects all metrics and traces with no data retention policy, meaning that the amount of data can get huge over time. However, SolidTelemetry comes with a job that allows you to purge old data, `SolidTelemetry::PurgeJob`, which will:
+
+* delete spans, events and links
+* delete metrics
+* delete performance items that don't have associated spans
+* update performance items that have associated spans
+
+If you're using solid_queue or other background jobs solution, you can set it as a recurring job. Otherwise, you can just run it manually from your rails console:
+
+```ruby
+SolidTelemetry::PurgeJob.perform_now 7.days.ago
+```
+
+The only argument for the job is the oldest date we want to keep. In the example above, we're keeping data from the last 7 days. If you don't pass any argument, it will default to 30 days.
+
 ## Compatibility
 
 SolidTelemetry is compatible with Postgres version 13 and above, MySQL version 8 and above and SQLite3 version 3.34 and above due to the use of Common Table Expressions (through [with_recursive_tree](https://github.com/sinaptia/with_recursive_tree)).
