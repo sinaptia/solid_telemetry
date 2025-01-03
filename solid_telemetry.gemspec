@@ -25,7 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "opentelemetry-instrumentation-all", ">= 0.66"
   spec.add_dependency "rails", ">= 6.0"
   spec.add_dependency "stimulus-rails"
-  spec.add_dependency "tailwindcss-rails", "~> 3.0"
   spec.add_dependency "turbo-rails"
   spec.add_dependency "with_recursive_tree"
 end

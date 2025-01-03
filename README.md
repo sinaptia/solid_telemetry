@@ -131,6 +131,16 @@ SolidTelemetry is compatible with Postgres version 13 and above, MySQL version 8
 
 SolidTelemetry depends on [active_median](https://github.com/ankane/active_median), which requires an extension to work with MySQL. Check out [active_median](https://github.com/ankane/active_median)'s instructions to set it up.
 
+## Development
+
+SolidTelemetry uses [tailwindcss-rails](https://github.com/rails/tailwindcss-rails) for styling. If any change is done to styling, run this command to regenerate the css:
+
+```bash
+$ bundle exec tailwindcss -i app/assets/stylesheets/solid_telemetry/application.tailwind.css -o app/assets/builds/solid_telemetry.css -c config/tailwind.config.js --minify
+```
+
+Append `-w` to that command to watch for changes.
+
 ## Contributing
 
 You can open an issue or a PR in GitHub.

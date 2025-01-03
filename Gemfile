@@ -14,3 +14,4 @@ gem "debug", ">= 1.0.0"
 
 gem "i18n-tasks"
 gem "standardrb"
+gem "tailwindcss-rails", "~> 3.0"
