@@ -103,6 +103,10 @@ SolidTelemetry comes with custom ActionPack instrumentation (`SolidTelemetry::In
 
 * `rack.session`
 * `action_dispatch.request.parameters`
+* `gc.allocations`: the number of allocations between the start and end of `process_action.action_controller`
+* `gc.time`: the amount of time spent on garbage collection between the start and end of `process_action.action_controller`
+
+*Note*: `gc.*` data is bound to the current process. This means `gc.allocations` includes the objects allocated by OpenTelemetry (exporter, spans, metrics, etc.), and `gc.time` includes the time spent its garbage collection. So, when looking at the data, you should consider these factors.
 
 ## Compatibility
 
