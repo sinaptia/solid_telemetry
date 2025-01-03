@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "opentelemetry-sdk", ">= 1.5"
   spec.add_dependency "opentelemetry-metrics-sdk", ">= 0.2"
   spec.add_dependency "opentelemetry-instrumentation-all", ">= 0.66"
-  spec.add_dependency "rails", ">= 7.2"
+  spec.add_dependency "rails", ">= 6.0"
   spec.add_dependency "stimulus-rails"
   spec.add_dependency "tailwindcss-rails", "~> 3.0"
   spec.add_dependency "turbo-rails"
