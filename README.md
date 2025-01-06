@@ -50,7 +50,7 @@ end
 
 ## How it works
 
-SolidTelemetry comes with a metric exporter and a trace exporter that instead of exporting to a third party service, inserts metrics and traces into the database, respectively.
+SolidTelemetry comes with a metric exporter (`SolidTelemetry::Exporters::ActiveRecord::MetricExporter`) and a trace exporter (`SolidTelemetry::Exporters::ActiveRecord::TraceExporter`) that instead of exporting to an OTLP (OpenTelemetry Protocol) endpoint or third party service. Traces and Metrics are imported as they are sent to the exporters. Once in the database, they are used to display the metrics dashboard, the raw traces and the Performance Items and Exceptions, which are a layer on top of the aforementioned traces.
 
 ## Configuration
 

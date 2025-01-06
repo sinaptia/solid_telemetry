@@ -29,7 +29,7 @@ module SolidTelemetry
     autoload :MemoryUsedRecorder, "solid_telemetry/recorders/memory_used_recorder"
   end
 
-  config_accessor :agent_interval, default: 5.seconds
+  config_accessor :agent_interval, default: 1.minute
   config_accessor :base_controller_class, default: "ApplicationController"
   config_accessor :connects_to
   config_accessor :importmap, default: Importmap::Map.new
