@@ -50,19 +50,27 @@ end
 
 ## How it works
 
-SolidTelemetry comes with a metric exporter (`SolidTelemetry::Exporters::ActiveRecord::MetricExporter`) and a trace exporter (`SolidTelemetry::Exporters::ActiveRecord::TraceExporter`) that instead of exporting to an OTLP (OpenTelemetry Protocol) endpoint or third party service. Traces and Metrics are imported as they are sent to the exporters. Once in the database, they are used to display the metrics dashboard, the raw traces and the Performance Items and Exceptions, which are a layer on top of the aforementioned traces.
+SolidTelemetry comes with a metric exporter (`SolidTelemetry::Exporters::ActiveRecord::MetricExporter`) and a trace exporter (`SolidTelemetry::Exporters::ActiveRecord::TraceExporter`) that export the signals to ActiveRecord instead of an OTLP (OpenTelemetry Protocol) endpoint or third party service. Traces and Metrics are imported as they are sent to the exporters. Once in the database, they are used to display the metrics dashboard, the raw traces and the Performance Items and Exceptions, which are a layer on top of the aforementioned traces.
+
+For collecting metrics, SolidTelemetry comes with metric readers that are subclasses of `OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader`. There's a CPU metric reader, and a swap memory reader, a total memory reader and a used memory reader.
 
 ## Configuration
 
 After installing the gem, OpenTelemetry is automatically configured in the `config/initializers/opentelemetry.rb` initializer. By default:
 
 * all instrumentation is enabled. You can read more about instrumentation [here](https://github.com/open-telemetry/opentelemetry-ruby-contrib/tree/main/instrumentation).
-* adds the hostname to the resource
+* adds the hostname and the service name to the resource
 * sets up the trace exporter provided by the gem, so spans are inserted into the database
 
-You can customize the OpenTelemetry initializer the way you need. For example, the service name is set to the name of your rails app by default. You might want to set the service name to an environment variable to distinguish the web app from the active job workers. And then use that value to filter spans or metrics. Or you might want to use a subset of instrumentation libraries, or customize the resource. You can do all that in this initializer.
+You can customize the OpenTelemetry initializer the way you need. For example, the service name is set to `unknown_service` unless the `OTEL_SERVICE_NAME` env var is set, but you can set your own. Or you might want to use a subset of instrumentation libraries, or customize the resource. You can do all that in this initializer.
 
-The `config/initializers/solid_telemetry.rb` file holds the configuration for the SolidTelemetry features, such as the interval for the agent to record metrics. See the available configuration in the initializer.
+The `config/initializers/solid_telemetry.rb` file holds the configuration for the SolidTelemetry features. See the available configuration in the initializer.
+
+### OpenTelemetry settings
+
+You can also set most of the `OTEL_*` env vars to configure certain aspects of the OpenTelemetry SDK. For example, if you want to customize the periodic metric readers interval, you can set the `OTEL_METRIC_EXPORT_INTERVAL` env var (otherwise it'll default to 60 seconds).
+
+Currently there's no official list of env vars used in OpenTelemetry, but you can [search the code](https://github.com/search?q=repo%3Aopen-telemetry%2Fopentelemetry-ruby%20OTEL_&type=code).
 
 ### Authentication and authorization
 
@@ -136,7 +144,7 @@ SolidTelemetry depends on [active_median](https://github.com/ankane/active_media
 SolidTelemetry uses [tailwindcss-rails](https://github.com/rails/tailwindcss-rails) for styling. If any change is done to styling, run this command to regenerate the css:
 
 ```bash
-$ bundle exec tailwindcss -i app/assets/stylesheets/solid_telemetry/application.tailwind.css -o app/assets/builds/solid_telemetry.css -c config/tailwind.config.js --minify
+$ bundle exec tailwindcss -i app/assets/stylesheets/solid_telemetry/application.tailwind.css -o app/assets/builds/solid_telemetry.css --minify
 ```
 
 Append `-w` to that command to watch for changes.

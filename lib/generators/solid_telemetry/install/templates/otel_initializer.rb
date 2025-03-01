@@ -30,7 +30,8 @@ OpenTelemetry::SDK.configure do |config|
   )
 
   config.resource = OpenTelemetry::SDK::Resources::Resource.create(
-    OpenTelemetry::SemanticConventions::Resource::HOST_NAME => Socket.gethostname
+    OpenTelemetry::SemanticConventions::Resource::HOST_NAME => Socket.gethostname,
+    OpenTelemetry::SemanticConventions::Resource::SERVICE_NAME => ENV.fetch("OTEL_SERVICE_NAME", "unknown_service")
   )
 
   config.add_span_processor OpenTelemetry::SDK::Trace::Export::BatchSpanProcessor.new(

@@ -11,8 +11,6 @@ require "solid_telemetry/engine"
 module SolidTelemetry
   include ActiveSupport::Configurable
 
-  autoload :Agent, "solid_telemetry/agent"
-
   module Exporters
     module ActiveRecord
       autoload :Exportable, "solid_telemetry/exporters/active_record/exportable"
@@ -21,15 +19,14 @@ module SolidTelemetry
     end
   end
 
-  module Recorders
-    autoload :Base, "solid_telemetry/recorders/base"
-    autoload :CpuRecorder, "solid_telemetry/recorders/cpu_recorder"
-    autoload :MemorySwapRecorder, "solid_telemetry/recorders/memory_swap_recorder"
-    autoload :MemoryTotalRecorder, "solid_telemetry/recorders/memory_total_recorder"
-    autoload :MemoryUsedRecorder, "solid_telemetry/recorders/memory_used_recorder"
+  module Metrics
+    autoload :BaseMetricReader, "solid_telemetry/metrics/base_metric_reader"
+    autoload :CpuMetricReader, "solid_telemetry/metrics/cpu_metric_reader"
+    autoload :MemorySwapMetricReader, "solid_telemetry/metrics/memory_swap_metric_reader"
+    autoload :MemoryTotalMetricReader, "solid_telemetry/metrics/memory_total_metric_reader"
+    autoload :MemoryUsedMetricReader, "solid_telemetry/metrics/memory_used_metric_reader"
   end
 
-  config_accessor :agent_interval, default: 1.minute
   config_accessor :base_controller_class, default: "ApplicationController"
   config_accessor :connects_to
   config_accessor :importmap, default: Importmap::Map.new

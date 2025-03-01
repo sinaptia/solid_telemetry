@@ -25,21 +25,12 @@ module SolidTelemetry
     end
 
     config.after_initialize do
-      resource = OpenTelemetry::SDK::Resources::Resource.create(
-        OpenTelemetry::SemanticConventions::Resource::SERVICE_NAME => ENV.fetch("OTEL_SERVICE_NAME", "unknown_service"),
-        OpenTelemetry::SemanticConventions::Resource::HOST_NAME => Socket.gethostname
-      )
+      exporter = SolidTelemetry::Exporters::ActiveRecord::MetricExporter.new
 
-      OpenTelemetry.meter_provider = OpenTelemetry::SDK::Metrics::MeterProvider.new resource: resource
-
-      agent = Agent.new
-
-      agent.recorders << Recorders::CpuRecorder.new(agent)
-      agent.recorders << Recorders::MemoryTotalRecorder.new(agent)
-      agent.recorders << Recorders::MemoryUsedRecorder.new(agent)
-      agent.recorders << Recorders::MemorySwapRecorder.new(agent)
-
-      agent.start
+      [Metrics::CpuMetricReader, Metrics::MemoryTotalMetricReader, Metrics::MemoryUsedMetricReader, Metrics::MemorySwapMetricReader].each do |klass|
+        reader = klass.new exporter: exporter
+        OpenTelemetry.meter_provider.add_metric_reader reader
+      end
 
       OpenTelemetry::Common::Utilities.untraced do
         Host.register if SolidTelemetry.enabled?
