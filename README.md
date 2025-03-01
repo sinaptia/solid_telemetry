@@ -50,9 +50,30 @@ end
 
 ## How it works
 
-SolidTelemetry comes with a metric exporter (`SolidTelemetry::Exporters::ActiveRecord::MetricExporter`) and a trace exporter (`SolidTelemetry::Exporters::ActiveRecord::TraceExporter`) that export the signals to ActiveRecord instead of an OTLP (OpenTelemetry Protocol) endpoint or third party service. Traces and Metrics are imported as they are sent to the exporters. Once in the database, they are used to display the metrics dashboard, the raw traces and the Performance Items and Exceptions, which are a layer on top of the aforementioned traces.
+SolidTelemetry comes with a metric exporter and a trace exporter that exports signals to ActiveRecord instead of an OTLP (OpenTelemetry Protocol) endpoint or third party service. Traces and Metrics are imported as they are sent to the exporters. Once in the database, they are used to display the metrics dashboard, the raw traces and the Performance Items and Exceptions, which are a layer on top of the aforementioned traces.
 
 For collecting metrics, SolidTelemetry comes with metric readers that are subclasses of `OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader`. There's a CPU metric reader, and a swap memory reader, a total memory reader and a used memory reader.
+
+### Exceptions
+
+Exceptions are automatically extracted from traces. When an exception occurrs in your app, one or more of the spans in its trace will have an associated event. Those events contain the exception type, message and stacktrace. Similar to commercial APMs such as Rollbar, AppSignal, etc. SolidTelemetry groups them by class name and where in your code happened.
+
+You can inspect each occurrence of every exception, and resolve them once you think they're not gonna happen again.
+
+### Performance items
+
+SolidTelemetry groups traces by name (eg `PostsController#show`) and shows how they perform:
+
+* P50
+* P95
+* P99
+* Throughput
+* Error rate
+* Impact score
+
+You should look at all the metrics to decide which Rails actions you want to optimize. However, the impact score can help you a little bit. The impact score is calculated as: `(throughput * combined duration) / 1000`. This score gives you an idea of how much time is spent on a specific action. The higher the score, the more impact it has.
+
+You can inspect the slowest traces for a given performance item.
 
 ## Configuration
 
@@ -116,7 +137,7 @@ SolidTelemetry comes with custom ActionPack instrumentation (`SolidTelemetry::In
 
 *Note*: `gc.*` data is bound to the current process. This means `gc.allocations` includes the objects allocated by OpenTelemetry (exporter, spans, metrics, etc.), and `gc.time` includes the time spent its garbage collection. So, when looking at the data, you should consider these factors.
 
-## Data retention
+## Purging old data
 
 By default, SolidTelemetry collects all metrics and traces with no data retention policy, meaning that the amount of data can get huge over time. However, SolidTelemetry comes with a job that allows you to purge old data, `SolidTelemetry::PurgeJob`, which will:
 
