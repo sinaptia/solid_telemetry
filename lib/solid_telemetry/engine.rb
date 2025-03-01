@@ -29,7 +29,7 @@ module SolidTelemetry
 
       [Metrics::CpuMetricReader, Metrics::MemoryTotalMetricReader, Metrics::MemoryUsedMetricReader, Metrics::MemorySwapMetricReader].each do |klass|
         reader = klass.new exporter: exporter
-        OpenTelemetry.meter_provider.add_metric_reader reader
+        OpenTelemetry.meter_provider.try :add_metric_reader, reader
       end
 
       OpenTelemetry::Common::Utilities.untraced do
