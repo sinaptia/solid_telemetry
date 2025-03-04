@@ -20,11 +20,9 @@ module SolidTelemetry
   end
 
   module Metrics
-    autoload :BaseMetricReader, "solid_telemetry/metrics/base_metric_reader"
-    autoload :CpuMetricReader, "solid_telemetry/metrics/cpu_metric_reader"
-    autoload :MemorySwapMetricReader, "solid_telemetry/metrics/memory_swap_metric_reader"
-    autoload :MemoryTotalMetricReader, "solid_telemetry/metrics/memory_total_metric_reader"
-    autoload :MemoryUsedMetricReader, "solid_telemetry/metrics/memory_used_metric_reader"
+    module Export
+      autoload :PeriodicMetricReader, "solid_telemetry/metrics/export/periodic_metric_reader"
+    end
   end
 
   config_accessor :base_controller_class, default: "ApplicationController"

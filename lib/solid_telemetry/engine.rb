@@ -25,12 +25,8 @@ module SolidTelemetry
     end
 
     config.after_initialize do
-      exporter = SolidTelemetry::Exporters::ActiveRecord::MetricExporter.new
-
-      [Metrics::CpuMetricReader, Metrics::MemoryTotalMetricReader, Metrics::MemoryUsedMetricReader, Metrics::MemorySwapMetricReader].each do |klass|
-        reader = klass.new exporter: exporter
-        OpenTelemetry.meter_provider.try :add_metric_reader, reader
-      end
+      reader = SolidTelemetry::Metrics::Export::PeriodicMetricReader.new exporter: SolidTelemetry::Exporters::ActiveRecord::MetricExporter.new
+      OpenTelemetry.meter_provider.try :add_metric_reader, reader
 
       OpenTelemetry::Common::Utilities.untraced do
         Host.register if SolidTelemetry.enabled?
