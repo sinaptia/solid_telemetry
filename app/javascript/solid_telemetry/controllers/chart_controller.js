@@ -5,6 +5,7 @@ export default class extends Controller {
     this.title = this.element.dataset.title
     this.min = parseInt(this.element.dataset.min)
     this.series = JSON.parse(this.element.dataset.series)
+    console.log(this.series)
     this.annotations = this.element.dataset.annotations ? JSON.parse(this.element.dataset.annotations) : []
     this.formatter = this.element.dataset.formatter
   }
@@ -29,6 +30,9 @@ export default class extends Controller {
       dataLabels: {
         enabled: false
       },
+      onDatasetHover: {
+        highlightDataSeries: true,
+      },
       series: this.series,
       stroke: {
         width: 1
@@ -37,6 +41,7 @@ export default class extends Controller {
         text: this.title
       },
       tooltip: {
+        shared: true,
         x: {
           format: "dd/MM/yyyy HH:mm:ss"
         },
