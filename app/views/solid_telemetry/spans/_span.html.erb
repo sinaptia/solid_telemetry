@@ -1,4 +1,4 @@
-<div id="<%= span.span_id %>" class="flex divide-x" data-controller="reveal" data-reveal-hidden-class="hidden">
+<div id="<%= span.span_id %>" class="flex divide-x" data-controller="reveal" data-reveal-hidden-class="hidden!">
   <div class="w-1/4 flex bg-gray-50 px-4">
     <% span.level.times do |i| %>
       <span class="pl-4 border-l border-gray-500"></span>
@@ -6,7 +6,7 @@
     <div class="pl-4 border-l-4 border-sky-600 inline-block">
       <button data-action="click->reveal#toggle" type="button" class="py-2">
         <%= image_tag "chevron-right.svg", class: "inline w-4", data: {"reveal-target" => "item"} %>
-        <%= image_tag "chevron-down.svg", class: "hidden inline w-4", data: {"reveal-target" => "item"} %>
+        <%= image_tag "chevron-down.svg", class: "hidden! inline w-4", data: {"reveal-target" => "item"} %>
         <%= span.name %>
       </button>
       <% if span.events.any? %>
@@ -21,7 +21,7 @@
       <button data-action="click->reveal#toggle" type="button" class="mt-2 text-white h-2 bg-sky-600" style="width: <%= span_width span, root %>%; margin-left: <%= span_margin span, root %>%"></button>
     </div>
 
-    <div data-reveal-target="item" class="hidden py-2 px-4 space-y-4 bg-gray-50 border-y">
+    <div data-reveal-target="item" class="hidden! py-2 px-4 space-y-4 bg-gray-50 border-y">
       <div class="flex justify-between items-center border-b pb-2">
         <div class="font-bold">
           <%= span.name %>

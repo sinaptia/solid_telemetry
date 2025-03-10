@@ -1,10 +1,10 @@
-<div data-controller="reveal" data-reveal-hidden-class="hidden">
+<div data-controller="reveal" data-reveal-hidden-class="hidden!">
   <button data-action="click->reveal#toggle" type="button" class="font-semibold">
     <%= image_tag "chevron-right.svg", class: "inline w-4", data: {"reveal-target" => "item"} %>
-    <%= image_tag "chevron-down.svg", class: "hidden inline w-4", data: {"reveal-target" => "item"} %>
+    <%= image_tag "chevron-down.svg", class: "hidden! inline w-4", data: {"reveal-target" => "item"} %>
     <%= title %>
   </button>
-  <table data-reveal-target="item" class="hidden w-full mt-2 text-sm border">
+  <table data-reveal-target="item" class="hidden! w-full mt-2 text-sm border">
     <tbody>
       <% attributes.each do |k, v| %>
         <tr class="align-top odd:bg-white">
