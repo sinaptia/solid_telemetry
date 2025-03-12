@@ -1,24 +1,23 @@
 class SolidTelemetry::InstallGenerator < Rails::Generators::Base
-  include Rails::Generators::Migration
-
   source_root File.expand_path("templates", __dir__)
 
-  def self.next_migration_number(dirname)
-    ActiveRecord::Migration.new.next_migration_number 0
+  def copy_files
+    template "config/initializers/opentelemetry.rb"
+    template "config/initializers/solid_telemetry.rb"
+    template "db/telemetry_schema.rb"
   end
 
-  def copy_migration
-    migration_template "migration.rb", "db/migrate/create_solid_telemetry_tables.rb"
-  end
+  def configure_database
+    %w[development production].each do |env|
+      pathname = Pathname(destination_root).join("config/environments/#{env}.rb")
 
-  def copy_initializers
-    template "initializer.rb", "config/initializers/solid_telemetry.rb"
-    template "otel_initializer.rb", "config/initializers/opentelemetry.rb"
+      gsub_file pathname, /^end\n/, "\n  config.solid_telemetry.connects_to = { database: { writing: :telemetry } }\nend\n"
+    end
   end
 
   private
 
-  def migration_version
-    "[#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}]"
+  def schema_version
+    "#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}"
   end
 end

@@ -1,8 +1,9 @@
 Description:
-    Explain the generator
+    Installs solid_telemetry
 
 Example:
-    bin/rails generate install Thing
+    bin/rails generate solid_telemetry:install
 
-    This will create:
-        what/will/it/create
+    This will perform the following:
+        Adds solid_telemetry db schema
+        Adds solid_telemetry and opentelemetry config files

@@ -28,15 +28,30 @@ $ bundle
 $ rails g solid_telemetry:install
 ```
 
-This will create the configuration files `config/initializer/opentelemetry.rb` and `config/initializer/solid_telemetry.rb`, and the migration that creates the necessary tables for SolidTelemetry to work.
+This will create the configuration files `config/initializer/opentelemetry.rb` and `config/initializer/solid_telemetry.rb`, and the telemetry schema (`db/telemetry_schema.rb`) necessary for SolidTelemetry to work.
+
+Calling `rails g solid_telemetry:install` will automatically add `config.solid_queue.connects_to = { database: { writing: :telemetry } }` to `config/environments/development.rb` and `config/environments/production.rb`, but the database configuration is left untouched. To configure the databases, make sure you add a `telemetry` database:
+
+```diff
+development:
++ primary:
+    <<: *default
+    database: app_development
++ telemetry:
++   <<: *default
++   database: telemetry_development
++   migrations_path: db/telemetry_migrate
+```
 
 Once you've done that, you can execute:
 
 ```bash
-$ rails db:migrate
+$ rails db:prepare
 ```
 
-to create the SolidTelemetry tables.
+to ensure the database is create and the schema is loaded.
+
+The reason behind this decision is that SolidTelemetry collects a huge amount of data and we want this data separated from our application. Besides, this is now the standard with all the solid_* gems from Rails.
 
 Finally, you need to mount the engine in your `config/routes.rb`:
 
@@ -103,27 +118,6 @@ By default, SolidTelemetry controllers inherit from the host app's `ApplicationC
 SolidTelemetry.configure do |config|
   config.base_controller_class = "AdminController"
 end
-```
-
-### Advanced configuration
-
-By default, the SolidTelemetry tables are created in your app's primary database. Since SolidTelemetry collects a lot of data, you might want to use another database for it. To do so, you need to add your telemetry database in `config/database.yml`:
-
-```yml
-production:
-  primary:
-    <<: *default
-    database: app_production
-  telemetry:
-    <<: *default
-    database: telemetry_production
-    migrations_paths: db/telemetry_migrate
-```
-
-Then, move the `XXX_create_solid_telemetry_tables.rb` migration from `db/migrate` to `db/telemetry_migrate` and add the following to your `config/environments/production.rb` file:
-
-```ruby
-config.solid_telemetry.connects_to = { database: { writing: :telemetry }}
 ```
 
 ## Custom instrumentation
