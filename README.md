@@ -67,7 +67,7 @@ end
 
 SolidTelemetry comes with a metric exporter and a trace exporter that exports signals to ActiveRecord instead of an OTLP (OpenTelemetry Protocol) endpoint or third party service. Traces and Metrics are imported as they are sent to the exporters. Once in the database, they are used to display the metrics dashboard, the raw traces and the Performance Items and Exceptions, which are a layer on top of the aforementioned traces.
 
-For collecting metrics, SolidTelemetry comes with metric readers that are subclasses of `OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader`. There's a CPU metric reader, and a swap memory reader, a total memory reader and a used memory reader.
+For collecting metrics, SolidTelemetry comes with a periodic metric reader, subclass of `OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader`. This periodic metric reader collects has a CPU counter, and a swap memory counter, a total memory counter and a used memory counter.
 
 ### Exceptions
 
