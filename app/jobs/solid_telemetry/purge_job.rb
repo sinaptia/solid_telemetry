@@ -18,6 +18,10 @@ module SolidTelemetry
           item.destroy
         end
       end
+
+      SolidTelemetry::SpanName.find_each do |span_name|
+        span_name.destroy if span_name.spans.none?
+      end
     end
   end
 end

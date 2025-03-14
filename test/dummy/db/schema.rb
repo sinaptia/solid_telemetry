@@ -1,21 +1,9 @@
-# This file is auto-generated from the current state of the database. Instead
-# of editing this file, please use the migrations feature of Active Record to
-# incrementally modify your database, and then regenerate this schema definition.
-#
-# This file is the source Rails uses to define your schema when running `bin/rails
-# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
-# be faster and is potentially less error prone than running all of your
-# migrations from scratch. Old migrations may fail to apply correctly if those
-# migrations use external dependencies or application code.
-#
-# It's strongly recommended that you check this file into your version control system.
-
-ActiveRecord::Schema[7.2].define(version: 2024_11_13_021446) do
+ActiveRecord::Schema[8.0].define(version: 1) do
   create_table "solid_telemetry_events", force: :cascade do |t|
     t.string "name"
     t.json "event_attributes"
     t.datetime "timestamp"
-    t.bigint "solid_telemetry_span_id", null: false
+    t.bigint "solid_telemetry_span_id"
     t.bigint "solid_telemetry_exception_id"
     t.index ["solid_telemetry_exception_id"], name: "index_solid_telemetry_events_on_solid_telemetry_exception_id"
     t.index ["solid_telemetry_span_id"], name: "index_solid_telemetry_events_on_solid_telemetry_span_id"
@@ -50,6 +38,22 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_13_021446) do
     t.index ["solid_telemetry_span_id"], name: "index_solid_telemetry_links_on_solid_telemetry_span_id"
   end
 
+  as_hostname = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+    "resource#>>'{attributes,host.name}'"
+  elsif defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
+    "resource->>'attributes'->>'host.name'"
+  elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
+    "JSON_VALUE(resource, '$.attributes.\"host.name\"')"
+  end
+
+  as_value = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+    "(data_points->0->>'value')::FLOAT"
+  elsif defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
+    "data_points->0->>'value'"
+  elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
+    "JSON_VALUE(data_points, '$[0].value' RETURNING FLOAT)"
+  end
+
   create_table "solid_telemetry_metrics", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -61,12 +65,12 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_13_021446) do
     t.string "aggregation_temporality"
     t.datetime "start_time_unix_nano"
     t.datetime "time_unix_nano"
-    t.virtual "hostname", type: :string, as: "resource->>'attributes'->>'host.name'", stored: true
-    t.virtual "value", type: :float, as: "data_points->0->>'value'", stored: true
+    t.virtual "hostname", type: :string, as: as_hostname, stored: true
+    t.virtual "value", type: :float, as: as_value, stored: true
   end
 
   create_table "solid_telemetry_performance_items", force: :cascade do |t|
-    t.string "name"
+    t.bigint "solid_telemetry_span_name_id"
     t.decimal "p50_duration"
     t.decimal "p95_duration"
     t.decimal "p99_duration"
@@ -78,8 +82,27 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_13_021446) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "solid_telemetry_span_names", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_solid_telemetry_span_names_on_name", unique: true
+  end
+
+  as_http_status_code = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) || defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
+    "span_attributes->>'http.status_code'"
+  elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
+    "span_attributes->'$.\"http.status_code\"'"
+  end
+
+  as_instrumentation_scope_name = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) || defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
+    "instrumentation_scope->>'name'"
+  elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
+    "instrumentation_scope->'$.\"name\"'"
+  end
+
   create_table "solid_telemetry_spans", force: :cascade do |t|
-    t.string "name"
+    t.bigint "solid_telemetry_span_name_id"
     t.string "kind"
     t.json "status"
     t.string "parent_span_id"
@@ -96,19 +119,21 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_13_021446) do
     t.json "trace_flags"
     t.json "tracestate"
     t.decimal "duration"
-    t.virtual "hostname", type: :string, as: "resource->>'attributes'->>'host.name'", stored: true
-    t.virtual "http_status_code", type: :string, as: "span_attributes->>'http.status_code'", stored: true
-    t.virtual "instrumentation_scope_name", type: :string, as: "instrumentation_scope->>'name'", stored: true
+    t.virtual "hostname", type: :string, as: as_hostname, stored: true
+    t.virtual "http_status_code", type: :string, as: as_http_status_code, stored: true
+    t.virtual "instrumentation_scope_name", type: :string, as: as_instrumentation_scope_name, stored: true
     t.index ["hostname"], name: "index_solid_telemetry_spans_on_hostname"
     t.index ["http_status_code"], name: "index_solid_telemetry_spans_on_http_status_code"
     t.index ["instrumentation_scope_name"], name: "index_solid_telemetry_spans_on_instrumentation_scope_name"
-    t.index ["name"], name: "index_solid_telemetry_spans_on_name"
     t.index ["parent_span_id"], name: "index_solid_telemetry_spans_on_parent_span_id"
     t.index ["span_id"], name: "index_solid_telemetry_spans_on_span_id"
+    t.index ["start_timestamp"], name: "index_solid_telemetry_spans_on_start_timestamp"
     t.index ["trace_id"], name: "index_solid_telemetry_spans_on_trace_id"
   end
 
   add_foreign_key "solid_telemetry_events", "solid_telemetry_exceptions"
   add_foreign_key "solid_telemetry_events", "solid_telemetry_spans"
   add_foreign_key "solid_telemetry_links", "solid_telemetry_spans"
+  add_foreign_key "solid_telemetry_performance_items", "solid_telemetry_span_names"
+  add_foreign_key "solid_telemetry_spans", "solid_telemetry_span_names"
 end

@@ -1,8 +1,11 @@
 module SolidTelemetry
   class PerformanceItem < ApplicationRecord
-    has_many :spans, foreign_key: :name, primary_key: :name
+    belongs_to :span_name, foreign_key: :solid_telemetry_span_name_id
+    has_many :spans, through: :span_name
 
     after_touch :recalculate_metrics
+
+    delegate :name, to: :span_name
 
     private
 

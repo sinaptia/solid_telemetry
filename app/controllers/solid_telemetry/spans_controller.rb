@@ -6,7 +6,7 @@ module SolidTelemetry
     before_action :set_span, only: :show
 
     def index
-      @spans = Span.roots.where(**@filters).order(sort_column => sort_direction).page(params[:page])
+      @spans = Span.joins(:span_name).includes(:span_name).roots.where(**@filters).order(sort_column => sort_direction).page(params[:page])
     end
 
     def show
@@ -24,7 +24,7 @@ module SolidTelemetry
 
     def set_filters
       @filters = {
-        name: params.dig(:filter, :name).presence,
+        "solid_telemetry_span_names.name": params.dig(:filter, :name).presence,
         start_timestamp: (params.dig(:filter, :start_at).try(:in_time_zone)..params.dig(:filter, :end_at).try(:in_time_zone)).presence
       }.compact
     end

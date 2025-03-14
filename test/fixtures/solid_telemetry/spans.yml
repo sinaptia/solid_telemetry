@@ -11,7 +11,7 @@
 # column: value
 
 old_span:
-  name: PostsController#index
+  span_name: posts_index_span_name
   kind: server
   status:
     code: 1
@@ -39,7 +39,7 @@ old_span:
     - old_unresolved_exception
 
 posts:
-  name: PostsController#index
+  span_name: posts_index_span_name
   kind: server
   status:
     code: 1

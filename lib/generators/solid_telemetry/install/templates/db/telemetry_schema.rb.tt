@@ -70,7 +70,7 @@ ActiveRecord::Schema[<%= schema_version %>].define(version: 1) do
   end
 
   create_table "solid_telemetry_performance_items", force: :cascade do |t|
-    t.string "name"
+    t.bigint "solid_telemetry_span_name_id"
     t.decimal "p50_duration"
     t.decimal "p95_duration"
     t.decimal "p99_duration"
@@ -80,6 +80,13 @@ ActiveRecord::Schema[<%= schema_version %>].define(version: 1) do
     t.decimal "error_rate"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "solid_telemetry_span_names", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_solid_telemetry_span_names_on_name", unique: true
   end
 
   as_http_status_code = if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) || defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
@@ -95,7 +102,7 @@ ActiveRecord::Schema[<%= schema_version %>].define(version: 1) do
   end
 
   create_table "solid_telemetry_spans", force: :cascade do |t|
-    t.string "name"
+    t.bigint "solid_telemetry_span_name_id"
     t.string "kind"
     t.json "status"
     t.string "parent_span_id"
@@ -118,8 +125,6 @@ ActiveRecord::Schema[<%= schema_version %>].define(version: 1) do
     t.index ["hostname"], name: "index_solid_telemetry_spans_on_hostname"
     t.index ["http_status_code"], name: "index_solid_telemetry_spans_on_http_status_code"
     t.index ["instrumentation_scope_name"], name: "index_solid_telemetry_spans_on_instrumentation_scope_name"
-    t.index ["name"], name: "index_solid_telemetry_spans_on_name"
-    t.index ["parent_span_id", "name"], name: "index_solid_telemetry_spans_on_parent_span_id_and_name"
     t.index ["parent_span_id"], name: "index_solid_telemetry_spans_on_parent_span_id"
     t.index ["span_id"], name: "index_solid_telemetry_spans_on_span_id"
     t.index ["start_timestamp"], name: "index_solid_telemetry_spans_on_start_timestamp"
@@ -129,4 +134,6 @@ ActiveRecord::Schema[<%= schema_version %>].define(version: 1) do
   add_foreign_key "solid_telemetry_events", "solid_telemetry_exceptions"
   add_foreign_key "solid_telemetry_events", "solid_telemetry_spans"
   add_foreign_key "solid_telemetry_links", "solid_telemetry_spans"
+  add_foreign_key "solid_telemetry_performance_items", "solid_telemetry_span_names"
+  add_foreign_key "solid_telemetry_spans", "solid_telemetry_span_names"
 end

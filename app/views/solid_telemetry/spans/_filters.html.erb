@@ -1,7 +1,7 @@
 <%= form_with scope: :filter, url: spans_path, method: :get, class: "flex mb-10 space-x-4 place-items-end" do |form| %>
   <div>
     <%= form.label :name, class: "block font-medium text-gray-900 text-sm/6" %>
-    <%= form.select :name, SolidTelemetry::Span.roots.select(:name).order(:name).distinct.pluck(:name), {selected: filter_param.dig(:filter, :name), include_blank: true}, class: "rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm/6" %>
+    <%= form.select :name, SolidTelemetry::SpanName.order(:name).pluck(:name), {selected: filter_param.dig(:filter, :"solid_telemetry_span_names.name"), include_blank: true}, class: "rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm/6" %>
   </div>
   <div>
     <%= form.label :start_at, class: "block font-medium text-gray-900 text-sm/6" %>

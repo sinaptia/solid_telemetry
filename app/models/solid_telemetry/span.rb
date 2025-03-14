@@ -4,6 +4,7 @@ module SolidTelemetry
 
     with_recursive_tree primary_key: :span_id, foreign_key: :parent_span_id, order: :start_timestamp
 
+    belongs_to :span_name, foreign_key: :solid_telemetry_span_name_id
     has_and_belongs_to_many :exceptions, foreign_key: :solid_telemetry_span_id, association_foreign_key: :solid_telemetry_exception_id
     has_many :events, foreign_key: :solid_telemetry_span_id, dependent: :destroy
     has_many :links, foreign_key: :solid_telemetry_span_id, dependent: :destroy
@@ -18,10 +19,12 @@ module SolidTelemetry
     scope :client_error, -> { where "http_status_code LIKE ?", "4%" }
     scope :server_error, -> { where "http_status_code LIKE ?", "5%" }
 
+    delegate :name, to: :span_name
+
     private
 
     def touch_performance_item
-      PerformanceItem.find_or_create_by(name: name).touch
+      PerformanceItem.find_or_create_by(span_name: span_name).touch
     end
   end
 end
