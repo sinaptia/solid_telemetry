@@ -6,7 +6,7 @@ module SolidTelemetry
     before_action :set_span, only: :show
 
     def index
-      @spans = Span.joins(:span_name).includes(:span_name).roots.where(**@filters).order(sort_column => sort_direction).page(params[:page])
+      @spans = Span.joins(:span_name).includes(:events, :span_name).roots.where(**@filters).order(sort_column => sort_direction).page(params[:page]).without_count
     end
 
     def show
