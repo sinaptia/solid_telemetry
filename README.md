@@ -40,7 +40,7 @@ development:
 + telemetry:
 +   <<: *default
 +   database: telemetry_development
-+   migrations_path: db/telemetry_migrate
++   migrations_paths: db/telemetry_migrate
 ```
 
 Once you've done that, you can execute:
