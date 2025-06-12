@@ -67,7 +67,11 @@ end
 
 SolidTelemetry comes with a metric exporter and a trace exporter that exports signals to ActiveRecord instead of an OTLP (OpenTelemetry Protocol) endpoint or third party service. Traces and Metrics are imported as they are sent to the exporters. Once in the database, they are used to display the metrics dashboard, the raw traces and the Performance Items and Exceptions, which are a layer on top of the aforementioned traces.
 
-For collecting metrics, SolidTelemetry comes with a periodic metric reader, subclass of `OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader`. This periodic metric reader collects has a CPU counter, and a swap memory counter, a total memory counter and a used memory counter.
+### Metrics
+
+SolidTelemetry comes with a periodic metric reader, subclass of `OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader`. This periodic metric reader collects resource usage information using various counters.
+
+By default, SolidTelemetry collects CPU load, total memory, used memory and swap memory.
 
 ### Exceptions
 
@@ -117,6 +121,57 @@ By default, SolidTelemetry controllers inherit from the host app's `ApplicationC
 ```ruby
 SolidTelemetry.configure do |config|
   config.base_controller_class = "AdminController"
+end
+```
+
+## Metrics
+
+By default, the metrics page shows 2 different metric types: resource metrics and trace metrics.
+
+Resource metrics are recorded using system commands and reflect the current status of the underlaying infrastructure. Trace metrics are not recorded, they're the result of looking at the traces in the database.
+
+Resource metrics include:
+
+* CPU load
+* Total memory
+* Used memory
+* Swap memory
+
+Trace metrics include:
+
+* Response time (P50, P95, P99)
+* Throughput (2xx, 3xx, 4xx, 5xx)
+* ActiveJob throughput (successful and failed jobs)
+
+You can change the order, remove metrics or add custom metrics in the `config/initializers/solid_telemetry.rb` file.
+
+### Custom metrics
+
+Adding custom metrics is easy. You need to subclass the `SolidTelemetry::Metrics::Base` class and implement a few methods:
+
+```ruby
+class RandomMetric < SolidTelemetry::Metrics::Base
+  name "random"
+  description "A random metric for demonstration purposes"
+
+  def record
+    rand 100
+  end
+end
+```
+
+This will create an OTEL up and down counter and record the random number. This'd be a resource metric, and it'll save a metric record. If you need to turn it a trace metric (or even look at your app's records), you would need to use `do_not_record!` and implement the `series` method. [See a reference implementation](/lib/solid_telemetry/metrics/response_time.rb).
+
+Then, you need to add this class to the `config/initializers/solid_telemetry.rb` file:
+
+```ruby
+SolidTelemetry.configure do |config|
+  # ...
+  config.metrics = {
+    cpu: [SolidTelemetry::Metrics::Cpu],
+    # ...
+    random: [RandomMetric]
+  }
 end
 ```
 
