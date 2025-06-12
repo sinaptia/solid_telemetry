@@ -23,11 +23,19 @@ module SolidTelemetry
     module Export
       autoload :PeriodicMetricReader, "solid_telemetry/metrics/export/periodic_metric_reader"
     end
+
+    autoload :ActiveJobThroughput, "solid_telemetry/metrics/active_job_throughput"
+    autoload :Base, "solid_telemetry/metrics/base"
+    autoload :Cpu, "solid_telemetry/metrics/cpu"
+    autoload :Memory, "solid_telemetry/metrics/memory"
+    autoload :ResponseTime, "solid_telemetry/metrics/response_time"
+    autoload :Throughput, "solid_telemetry/metrics/throughput"
   end
 
   config_accessor :base_controller_class, default: "ApplicationController"
   config_accessor :connects_to
   config_accessor :importmap, default: Importmap::Map.new
+  config_accessor :metrics, default: {}
 
   def self.enabled?
     !defined?(Rails::Console) && (!defined?(Rails::Command) || defined?(Rails::Server))

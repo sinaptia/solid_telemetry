@@ -54,14 +54,16 @@ en:
           failed: Failed
           successful: Successful
           title: ActiveJob throughput
-        cpu_usage:
-          max: CPU usage (max)
+        cpu:
+          load: CPU usage (max)
           title: CPU usage
-        memory_usage:
-          max_memory: Memory (max)
-          memory_used: Memory used (max)
-          swap_memory: Swap memory (max)
+        memory:
           title: Memory usage
+          total: Memory (max)
+          used: Memory used (max)
+          swap: Swap memory (max)
+        coso:
+          title: Coso
         response_time:
           p50: P50
           p95: P95
