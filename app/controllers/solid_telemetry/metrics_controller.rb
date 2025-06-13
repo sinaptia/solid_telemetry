@@ -7,11 +7,11 @@ module SolidTelemetry
     def index
       @metrics = SolidTelemetry.metrics.map do |group, metrics|
         {
-          title: t(".#{group}.title"),
+          title: t(".#{group}.title", default: group.to_s),
           formatter: metrics.first.formatter,
           series: metrics.map do |metric|
             {
-              name: t(".#{metric.name}"),
+              name: t(".#{metric.name}", default: metric.name),
               data: metric.series(@host, @time_range, @resolution)
             }
           end

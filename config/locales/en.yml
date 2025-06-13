@@ -62,8 +62,6 @@ en:
           total: Memory (max)
           used: Memory used (max)
           swap: Swap memory (max)
-        coso:
-          title: Coso
         response_time:
           p50: P50
           p95: P95
