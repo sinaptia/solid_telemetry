@@ -12,13 +12,14 @@ module SolidTelemetry
           @counters = {}
 
           metrics.each do |metric|
-            @counters[metric.name] = meter.create_up_down_counter metric.name, description: metric.description
+            @counters[metric.name] = meter.send :"create_#{metric.instrument_kind}",  metric.name, description: metric.description
           end
         end
 
         def collect
           metrics.each do |metric|
-            @counters[metric.name].add metric.new.record
+            method = metric.instrument_kind == :gauge ? :record : :add
+            @counters[metric.name].send method, metric.new.measure
           end
 
           super
@@ -31,7 +32,7 @@ module SolidTelemetry
         end
 
         def metrics
-          SolidTelemetry.metrics.values.flatten.select { |metric| metric.record? }
+          SolidTelemetry.metrics.values.flatten
         end
       end
     end
