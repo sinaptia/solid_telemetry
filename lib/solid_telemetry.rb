@@ -29,6 +29,7 @@ module SolidTelemetry
     autoload :Cpu, "solid_telemetry/metrics/cpu"
     autoload :Memory, "solid_telemetry/metrics/memory"
     autoload :ResponseTime, "solid_telemetry/metrics/response_time"
+    autoload :SwapMemory, "solid_telemetry/metrics/swap_memory"
     autoload :Throughput, "solid_telemetry/metrics/throughput"
   end
 

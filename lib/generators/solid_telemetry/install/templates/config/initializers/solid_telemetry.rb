@@ -8,8 +8,9 @@ SolidTelemetry.configure do |config|
     ],
     memory: [
       SolidTelemetry::Metrics::Memory::Total,
-      SolidTelemetry::Metrics::Memory::Used,
-      SolidTelemetry::Metrics::Memory::Swap
+      SolidTelemetry::Metrics::Memory::Used
+      SolidTelemetry::Metrics::SwapMemory::Total,
+      SolidTelemetry::Metrics::SwapMemory::Used
     ],
     response_time: [
       SolidTelemetry::Metrics::ResponseTime::P50,
