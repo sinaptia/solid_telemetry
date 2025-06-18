@@ -18,7 +18,7 @@ module SolidTelemetry
 
         def collect
           metrics.each do |metric|
-            method = metric.instrument_kind == :gauge ? :record : :add
+            method = metric.instrument_kind == :up_down_counter ? :add : :record
             @counters[metric.name].send method, metric.new.measure
           end
 
