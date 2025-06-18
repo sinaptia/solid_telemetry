@@ -7,9 +7,9 @@ module SolidTelemetry
           @description
         end
 
-        def formatter(formatter = nil)
-          @formatter = formatter if formatter.present?
-          @formatter
+        def unit(unit = nil)
+          @unit = unit if unit.present?
+          @unit
         end
 
         def instrument_kind(instrument_kind = nil)
@@ -22,12 +22,21 @@ module SolidTelemetry
           @name
         end
 
-        def prepare_values(series)
-          series.map { |k, v| [k.to_i.in_milliseconds, v] }
+        def serialize_values(series)
+          case unit
+          when "ms"
+            series.map { |k, v| [k.to_i.in_milliseconds, v.to_f] }
+          when "size"
+            series.map { |k, v| [k.to_i.in_milliseconds, v&.kilobytes] }
+          else
+            series.map { |k, v| [k.to_i.in_milliseconds, v] }
+          end
         end
 
         def series(host, time_range, resolution)
-          prepare_values Metric.by_host(host.name).where(name: name).group_by_minute(:time_unix_nano, range: time_range, n: resolution.in_minutes.to_i).maximum(:value)
+          calculation = [:gauge, :histogram].include?(instrument_kind) ? :maximum : :sum
+
+          serialize_values Metric.by_host(host.name).where(name: name).group_by_minute(:time_unix_nano, range: time_range, n: resolution.in_minutes.to_i).send(calculation, :value)
         end
       end
 

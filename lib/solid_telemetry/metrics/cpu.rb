@@ -3,7 +3,7 @@ module SolidTelemetry
     class Cpu < Base
       name "cpu.load"
       description "CPU usage"
-      formatter "percentage"
+      unit "percentage"
       instrument_kind :gauge
 
       def measure

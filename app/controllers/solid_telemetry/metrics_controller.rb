@@ -5,10 +5,10 @@ module SolidTelemetry
     before_action :set_resolution
 
     def index
-      @metrics = SolidTelemetry.metrics.map do |group, metrics|
+      @metrics = SolidTelemetry.metrics.map do |chart, metrics|
         {
-          title: t(".#{group}.title", default: group.to_s),
-          formatter: metrics.first.formatter,
+          title: t(".#{chart}.title", default: chart.to_s),
+          unit: metrics.first.unit,
           series: metrics.map do |metric|
             {
               name: t(".#{metric.name}", default: metric.name),

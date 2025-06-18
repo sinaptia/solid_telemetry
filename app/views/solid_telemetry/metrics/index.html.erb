@@ -9,7 +9,7 @@
         data-controller="chart"
         data-title="<%= metric[:title] %>"
         data-min="<%= @start_at.to_i.in_milliseconds %>"
-        data-formatter="<%= metric[:formatter] %>"
+        data-formatter="<%= metric[:unit] %>"
         data-series="<%= metric[:series].to_json %>"
       >
       </div>

@@ -4,7 +4,7 @@ module SolidTelemetry
       class P50 < ResponseTime
         name "response_time.p50"
         description "P50"
-        formatter "ms"
+        unit "ms"
         instrument_kind :up_down_counter
 
         def measure = super.percentile(:duration, 0.5)
@@ -13,7 +13,7 @@ module SolidTelemetry
       class P95 < ResponseTime
         name "response_time.p95"
         description "P95"
-        formatter "ms"
+        unit "ms"
         instrument_kind :up_down_counter
 
         def measure = super.percentile(:duration, 0.95)
@@ -22,14 +22,10 @@ module SolidTelemetry
       class P99 < ResponseTime
         name "response_time.p99"
         description "P99"
-        formatter "ms"
+        unit "ms"
         instrument_kind :up_down_counter
 
         def measure = super.percentile(:duration, 0.99)
-      end
-
-      def self.prepare_values(series)
-        series.map { |k, v| [k.to_i.in_milliseconds, v.to_f] }
       end
 
       def measure
