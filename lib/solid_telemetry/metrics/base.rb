@@ -3,35 +3,23 @@ module SolidTelemetry
     class Base
       class << self
         def description(description = nil)
-          if description.present?
-            @description = description
-          else
-            @description
-          end
+          @description = description if description.present?
+          @description
         end
 
         def formatter(formatter = nil)
-          if formatter.present?
-            @formatter = formatter
-          else
-            @formatter
-          end
+          @formatter = formatter if formatter.present?
+          @formatter
         end
 
         def instrument_kind(instrument_kind = nil)
-          if instrument_kind.present?
-            @instrument_kind = instrument_kind
-          else
-            @instrument_kind || :gauge
-          end
+          @instrument_kind = instrument_kind if instrument_kind.present?
+          @instrument_kind || :gauge
         end
 
         def name(name = nil)
-          if name.present?
-            @name = name
-          else
-            @name
-          end
+          @name = name if name.present?
+          @name
         end
 
         def prepare_values(series)
