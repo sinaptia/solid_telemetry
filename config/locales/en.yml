@@ -54,19 +54,21 @@ en:
           failed: Failed
           successful: Successful
           title: ActiveJob throughput
-        cpu_usage:
-          max: CPU usage (max)
+        cpu:
+          load: CPU usage (max)
           title: CPU usage
-        memory_usage:
-          max_memory: Memory (max)
-          memory_used: Memory used (max)
-          swap_memory: Swap memory (max)
+        memory:
           title: Memory usage
+          total: Memory (total)
+          used: Memory used (max)
         response_time:
           p50: P50
           p95: P95
           p99: P99
           title: Response time
+        swap_memory:
+          total: Swap memory (total)
+          used: Swap memory used (max)
         throughput:
           client_error: 4xx
           redirection: 3xx

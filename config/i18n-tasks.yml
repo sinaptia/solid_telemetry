@@ -150,6 +150,12 @@ search:
 # - 'simple_form.{error_notification,required}.:'
 ignore_unused:
   - "activerecord.attributes.*"
+  - "solid_telemetry.metrics.index.active_job_throughput.*"
+  - "solid_telemetry.metrics.index.cpu.*"
+  - "solid_telemetry.metrics.index.memory.*"
+  - "solid_telemetry.metrics.index.response_time.*"
+  - "solid_telemetry.metrics.index.swap_memory.*"
+  - "solid_telemetry.metrics.index.throughput.*"
 
 ## Exclude these keys from the `i18n-tasks eq-base' report:
 # ignore_eq_base:

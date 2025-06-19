@@ -5,16 +5,11 @@ export default class extends Controller {
     this.title = this.element.dataset.title
     this.min = parseInt(this.element.dataset.min)
     this.series = JSON.parse(this.element.dataset.series)
-    console.log(this.series)
-    this.annotations = this.element.dataset.annotations ? JSON.parse(this.element.dataset.annotations) : []
     this.formatter = this.element.dataset.formatter
   }
 
   connect() {
     const chart = new ApexCharts(this.element, {
-      annotations: {
-        yaxis: this.annotations
-      },
       chart: {
         id: this.title,
         group: "metrics",

@@ -3,63 +3,16 @@
 <%= render "filters", resolution: @resolution %>
 
 <div class="space-y-10">
-  <div
-    data-controller="chart"
-    data-title="<%=t ".cpu_usage.title" %>"
-    data-min="<%= @start_at.to_i.in_milliseconds %>"
-    data-formatter="percentage"
-    data-series="<%= @cpu_series.to_json %>"
-  >
-  </div>
-
-  <div
-    data-controller="chart"
-    data-title="<%=t ".memory_usage.title" %>"
-    data-min="<%= @start_at.to_i.in_milliseconds %>"
-    data-formatter="size"
-    data-annotations="<%= [{
-      y: @max_memory,
-      borderColor: "#dc2626",
-      label: {
-        text: t(".memory_usage.max_memory"),
-        style: {
-          background: "#dc2626",
-          color: "#ffffff"
-        }
-      }
-    }].to_json %>"
-    data-series="<%= @memory_series.to_json %>"
-  >
-  </div>
-
-  <% if has_data?(@response_time_series) %>
-    <div
-      data-controller="chart"
-      data-title="<%=t ".response_time.title" %>"
-      data-min="<%= @start_at.to_i.in_milliseconds %>"
-      data-formatter="ms"
-      data-series="<%= @response_time_series.to_json %>"
-    >
-    </div>
-  <% end %>
-
-  <% if has_data?(@throughput_series) %>
-    <div
-      data-controller="chart"
-      data-title="<%=t ".throughput.title" %>"
-      data-min="<%= @start_at.to_i.in_milliseconds %>"
-      data-series="<%= @throughput_series.to_json %>"
-    >
-    </div>
-  <% end %>
-
-  <% if has_data?(@active_job_throughput_series) %>
-    <div
-      data-controller="chart"
-      data-title="<%=t ".active_job_throughput.title" %>"
-      data-min="<%= @start_at.to_i.in_milliseconds %>"
-      data-series="<%= @active_job_throughput_series.to_json %>"
-    >
-    </div>
+  <% @metrics.each do |metric| %>
+    <% if has_data?(metric[:series]) %>
+      <div
+        data-controller="chart"
+        data-title="<%= metric[:title] %>"
+        data-min="<%= @start_at.to_i.in_milliseconds %>"
+        data-formatter="<%= metric[:unit] %>"
+        data-series="<%= metric[:series].to_json %>"
+      >
+      </div>
+    <% end %>
   <% end %>
 </div>
