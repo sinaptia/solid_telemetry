@@ -30,12 +30,10 @@ module SolidTelemetry
 
         def serialize_values(series)
           case unit
-          when "ms"
-            series.map { |k, v| [k.to_i.in_milliseconds, v.to_f] }
           when "size"
             series.map { |k, v| [k.to_i.in_milliseconds, v&.kilobytes] }
           else
-            series.map { |k, v| [k.to_i.in_milliseconds, v] }
+            series.map { |k, v| [k.to_i.in_milliseconds, v.to_f] }
           end
         end
 
@@ -43,18 +41,6 @@ module SolidTelemetry
           serialize_values metric_data(host, time_range, resolution)
         end
       end
-
-      class Span < Base
-        def self.series(host, time_range, resolution)
-          serialize_values span_data(host, time_range, resolution)
-        end
-
-        def self.span_data(host, time_range, resolution)
-          SolidTelemetry::Span.by_host(host.name).roots.where(start_timestamp: time_range).group_by_minute(:start_timestamp, n: resolution.in_minutes.to_i)
-        end
-      end
-
-      def measure = raise NotImplementedError
     end
   end
 end
