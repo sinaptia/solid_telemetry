@@ -1,40 +1,40 @@
 module SolidTelemetry
   module Metrics
-    class Throughput < Base
+    class Throughput < Base::Span
       class Successful < Throughput
         name "throughput.successful"
         description "2xx"
-        instrument_kind :up_down_counter
 
-        def measure = super.successful.count
+        def self.span_data(host, time_range, resolution)
+          super.rack.successful.count
+        end
       end
 
       class Redirection < Throughput
         name "throughput.redirection"
         description "3xx"
-        instrument_kind :up_down_counter
 
-        def measure = super.redirection.count
+        def self.span_data(host, time_range, resolution)
+          super.rack.redirection.count
+        end
       end
 
       class ClientError < Throughput
         name "throughput.client_error"
         description "4xx"
-        instrument_kind :up_down_counter
 
-        def measure = super.client_error.count
+        def self.span_data(host, time_range, resolution)
+          super.rack.client_error.count
+        end
       end
 
       class ServerError < Throughput
         name "throughput.server_error"
         description "5xx"
-        instrument_kind :up_down_counter
 
-        def measure = super.server_error.count
-      end
-
-      def measure
-        Span.by_host(Host.current.name).roots.rack.where(start_timestamp: 1.minute.ago..)
+        def self.span_data(host, time_range, resolution)
+          super.rack.server_error.count
+        end
       end
     end
   end

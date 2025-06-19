@@ -128,28 +128,31 @@ By default, SolidTelemetry shows 5 charts:
 
 * CPU usage
 * Memory usage
-* Response time (only if the host/process runs the rails server)
-* Throughput (only if the host/process runs the rails server)
-* ActiveJob throughput (only if the host/process runs job workers)
+* Response time
+* Throughput
+* ActiveJob throughput
 
 You can change the order, remove metrics or add custom metrics in the `config/initializers/solid_telemetry.rb` file.
 
 ### Custom metrics
 
-Adding custom metrics is easy. You need to subclass the `SolidTelemetry::Metrics::Base` class and implement the `#measure` method:
+In SolidTelemetry there are 2 kinds of metrics: metrics that measure something with [instruments](https://github.com/open-telemetry/opentelemetry-ruby/tree/main/metrics_sdk/lib/opentelemetry/sdk/metrics/instrument) (cpu load, memory usage, etc), and metrics that measure data from somewhere else, tipically traces (but could be your own app's data).
+
+In both cases, you need to subclass the `SolidTelemetry::Metrics::Base` class and define a few things:
 
 ```ruby
 class RandomMetric < SolidTelemetry::Metrics::Base
-  name "random"
-  description "A random metric for demonstration purposes"
+  name "random" # self-explanatory
+  description "A random metric for demonstration purposes" # self-explanatory
+  unit "things" # optional, used by opentelemetry internally, doesn't have a specific use
+  instrument_kind :gauge # optional, what kind of instrument are we using to measure. don't define it if you are looking data elsewhere
 
+  # this method will be called periodically. don't define it if you are planning to look data elsewhere
   def measure
     rand 100
   end
 end
 ```
-
-This will create an OTEL gauge instrument and record the random number.
 
 Then, you need to add this class to the `config/initializers/solid_telemetry.rb` file:
 
@@ -165,6 +168,8 @@ end
 ```
 
 The `metrics` setting must be a hash, where the key is the chart name and the value is an array of metrics that will be shown in that chart.
+
+You can look at the [existing metrics](/lib/solid_telemetry/metrics/) for inspiration.
 
 ## Custom instrumentation
 

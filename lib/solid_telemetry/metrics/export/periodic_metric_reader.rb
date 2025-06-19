@@ -30,7 +30,7 @@ module SolidTelemetry
         end
 
         def metrics
-          SolidTelemetry.metrics.values.flatten
+          SolidTelemetry.metrics.values.flatten.select { |metric| metric.instrument_kind.present? }
         end
       end
     end

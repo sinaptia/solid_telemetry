@@ -14,7 +14,7 @@ module SolidTelemetry
 
         def instrument_kind(instrument_kind = nil)
           @instrument_kind = instrument_kind if instrument_kind.present?
-          @instrument_kind || :gauge
+          @instrument_kind
         end
 
         def name(name = nil)
@@ -37,6 +37,16 @@ module SolidTelemetry
           calculation = [:gauge, :histogram].include?(instrument_kind) ? :maximum : :sum
 
           serialize_values Metric.by_host(host.name).where(name: name).group_by_minute(:time_unix_nano, range: time_range, n: resolution.in_minutes.to_i).send(calculation, :value)
+        end
+      end
+
+      class Span < Base
+        def self.series(host, time_range, resolution)
+          serialize_values span_data(host, time_range, resolution)
+        end
+
+        def self.span_data(host, time_range, resolution)
+          SolidTelemetry::Span.by_host(host.name).roots.where(start_timestamp: time_range).group_by_minute(:start_timestamp, n: resolution.in_minutes.to_i)
         end
       end
 
