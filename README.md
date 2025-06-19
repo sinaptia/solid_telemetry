@@ -144,12 +144,18 @@ In both cases, you need to subclass the `SolidTelemetry::Metrics::Base` class an
 class RandomMetric < SolidTelemetry::Metrics::Base
   name "random" # self-explanatory
   description "A random metric for demonstration purposes" # self-explanatory
-  unit "things" # optional, used by opentelemetry internally, doesn't have a specific use
-  instrument_kind :gauge # optional, what kind of instrument are we using to measure. don't define it if you are looking data elsewhere
+  unit "things" # Optional. Used by OpenTelemetry internally, doesn't have a specific use.
+  instrument_kind :gauge # Optional. What kind of instrument are we using to measure. Don't define it if you are looking data elsewhere.
 
-  # this method will be called periodically. don't define it if you are planning to look data elsewhere
+  # Optional. Only define it if you set instrument kind. This means that metrics will be measured periodically.
+  # If defined, SolidTelemetry will store this value as a SolidTelemetry::Metric.
   def measure
     rand 100
+  end
+
+  # Optional. Only define it if you don't set an instrument kind and want to measure data elsewhere.
+  def self.metric_data(host, time_range, resolution)
+    # ...
   end
 end
 ```
@@ -169,7 +175,30 @@ end
 
 The `metrics` setting must be a hash, where the key is the chart name and the value is an array of metrics that will be shown in that chart.
 
-You can look at the [existing metrics](/lib/solid_telemetry/metrics/) for inspiration.
+#### Example
+
+Let's say you want to track how many orders are created in your e-commerce app. You can do it in two different ways. You can store the measured value in the database or lookup the information every time the metrics are displayed. **Be careful**, this could slow down the metrics page significantly.
+
+```ruby
+class OrdersMetric < SolidTelemetry::Metrics::Base
+  name "orders"
+  description "Number of orders created"
+
+  # method 1: instrumented metrics, they're stored in the database
+  instrument_kind :counter
+
+  # by default metrics are recorded every minute, but the behavior can be changed by setting OTEL_METRIC_EXPORT_INTERVAL (in milliseconds)
+  # for this reason, this method counts the orders created in the last minute
+  def measure
+    Order.where(created_at: 1.minute.ago..).count
+  end
+
+  # method 2: lookup the data on the fly
+  def metric_data(host, time_range, resolution)
+    Order.where(created_at: time_range).group_by_minute(:created_at, n: resolution.in_minutes.to_i).count
+  end
+end
+```
 
 ## Custom instrumentation
 

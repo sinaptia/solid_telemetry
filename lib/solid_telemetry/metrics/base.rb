@@ -17,6 +17,12 @@ module SolidTelemetry
           @instrument_kind
         end
 
+        def metric_data(host, time_range, resolution)
+          calculation = [:gauge, :histogram].include?(instrument_kind) ? :maximum : :sum
+
+          Metric.by_host(host.name).where(name: name).group_by_minute(:time_unix_nano, range: time_range, n: resolution.in_minutes.to_i).send(calculation, :value)
+        end
+
         def name(name = nil)
           @name = name if name.present?
           @name
@@ -34,9 +40,7 @@ module SolidTelemetry
         end
 
         def series(host, time_range, resolution)
-          calculation = [:gauge, :histogram].include?(instrument_kind) ? :maximum : :sum
-
-          serialize_values Metric.by_host(host.name).where(name: name).group_by_minute(:time_unix_nano, range: time_range, n: resolution.in_minutes.to_i).send(calculation, :value)
+          serialize_values metric_data(host, time_range, resolution)
         end
       end
 
