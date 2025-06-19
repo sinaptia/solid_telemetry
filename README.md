@@ -177,7 +177,7 @@ The `metrics` setting must be a hash, where the key is the chart name and the va
 
 #### Example
 
-Let's say you want to track how many orders are created in your e-commerce app. You can do it in two different ways. You can store the measured value in the database or lookup the information every time the metrics are displayed. **Be careful**, this could slow down the metrics page significantly.
+Let's say you want to track how many orders are created in your e-commerce app. You can do it in two different ways. You can store the measured value in the database or lookup the information every time the metrics are displayed. **Be careful**, looking up the data every time the metrics are displayed could slow down the metrics page significantly if they're not efficiently enough.
 
 ```ruby
 class OrdersMetric < SolidTelemetry::Metrics::Base
