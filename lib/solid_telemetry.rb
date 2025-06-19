@@ -36,7 +36,32 @@ module SolidTelemetry
   config_accessor :base_controller_class, default: "ApplicationController"
   config_accessor :connects_to
   config_accessor :importmap, default: Importmap::Map.new
-  config_accessor :metrics, default: {}
+  config_accessor :metrics, default: {
+    cpu: [
+      SolidTelemetry::Metrics::Cpu
+    ],
+    memory: [
+      SolidTelemetry::Metrics::Memory::Total,
+      SolidTelemetry::Metrics::Memory::Used,
+      SolidTelemetry::Metrics::SwapMemory::Total,
+      SolidTelemetry::Metrics::SwapMemory::Used
+    ],
+    response_time: [
+      SolidTelemetry::Metrics::ResponseTime::P50,
+      SolidTelemetry::Metrics::ResponseTime::P95,
+      SolidTelemetry::Metrics::ResponseTime::P99
+    ],
+    throughput: [
+      SolidTelemetry::Metrics::Throughput::Successful,
+      SolidTelemetry::Metrics::Throughput::Redirection,
+      SolidTelemetry::Metrics::Throughput::ClientError,
+      SolidTelemetry::Metrics::Throughput::ServerError
+    ],
+    active_job_throughput: [
+      SolidTelemetry::Metrics::ActiveJobThroughput::Successful,
+      SolidTelemetry::Metrics::ActiveJobThroughput::Failed
+    ]
+  }
 
   def self.enabled?
     !defined?(Rails::Console) && (!defined?(Rails::Command) || defined?(Rails::Server))
