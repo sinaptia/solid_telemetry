@@ -70,6 +70,7 @@ ActiveRecord::Schema[<%= schema_version %>].define(version: 1) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "root_span", default: false
     t.index ["name"], name: "index_solid_telemetry_span_names_on_name", unique: true
   end
 
@@ -97,6 +98,7 @@ ActiveRecord::Schema[<%= schema_version %>].define(version: 1) do
     t.index ["hostname"], name: "index_solid_telemetry_spans_on_hostname"
     t.index ["http_status_code"], name: "index_solid_telemetry_spans_on_http_status_code"
     t.index ["instrumentation_scope_name"], name: "index_solid_telemetry_spans_on_instrumentation_scope_name"
+    t.index ["parent_span_id", "solid_telemetry_span_name_id"], name: "idx_on_parent_span_id_solid_telemetry_span_name_id_d576cb918b"
     t.index ["parent_span_id"], name: "index_solid_telemetry_spans_on_parent_span_id"
     t.index ["span_id"], name: "index_solid_telemetry_spans_on_span_id"
     t.index ["start_timestamp"], name: "index_solid_telemetry_spans_on_start_timestamp"

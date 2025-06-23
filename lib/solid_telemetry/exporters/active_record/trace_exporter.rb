@@ -16,6 +16,7 @@ module SolidTelemetry
                 parent_span_id = (span_data.parent_span_id == OpenTelemetry::Trace::INVALID_SPAN_ID) ? nil : span_data.hex_parent_span_id
 
                 span_name = SpanName.find_or_create_by name: span_data.name
+                span_name.update root_span: parent_span_id.blank?
 
                 span = Span.create(
                   span_name: span_name,
