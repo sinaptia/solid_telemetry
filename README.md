@@ -67,7 +67,9 @@ end
 
 SolidTelemetry comes with a metric exporter and a trace exporter that exports signals to ActiveRecord instead of an OTLP (OpenTelemetry Protocol) endpoint or third party service. Traces and Metrics are imported as they are sent to the exporters. Once in the database, they are used to display the metrics dashboard, the raw traces and the Performance Items and Exceptions, which are a layer on top of the aforementioned traces.
 
-For collecting metrics, SolidTelemetry comes with a periodic metric reader, subclass of `OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader`. This periodic metric reader collects has a CPU counter, and a swap memory counter, a total memory counter and a used memory counter.
+### Metrics
+
+SolidTelemetry comes with a periodic metric reader, subclass of `OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader`, that will collect various metrics using different instrument kinds. By default, SolidTelemetry collects CPU load, total memory, used memory, swap memory, response time (P50, P95, P99), throughput (2xx, 3xx, 4xx, 5xx), and active job throughput (successful and failed jobs).
 
 ### Exceptions
 
@@ -117,6 +119,84 @@ By default, SolidTelemetry controllers inherit from the host app's `ApplicationC
 ```ruby
 SolidTelemetry.configure do |config|
   config.base_controller_class = "AdminController"
+end
+```
+
+## Metrics
+
+By default, SolidTelemetry shows 5 charts:
+
+* CPU usage
+* Memory usage
+* Response time
+* Throughput
+* ActiveJob throughput
+
+You can change the order, remove metrics or add custom metrics in the `config/initializers/solid_telemetry.rb` file.
+
+### Custom metrics
+
+In SolidTelemetry there are 2 kinds of metrics: metrics that measure something with [instruments](https://github.com/open-telemetry/opentelemetry-ruby/tree/main/metrics_sdk/lib/opentelemetry/sdk/metrics/instrument) (cpu load, memory usage, etc), and metrics that measure data from somewhere else, tipically traces (but could be your own app's data).
+
+In both cases, you need to subclass the `SolidTelemetry::Metrics::Base` class and define a few things:
+
+```ruby
+class RandomMetric < SolidTelemetry::Metrics::Base
+  name "random" # self-explanatory
+  description "A random metric for demonstration purposes" # self-explanatory
+  unit "things" # Optional. Used by OpenTelemetry internally, doesn't have a specific use.
+  instrument_kind :gauge # Optional. What kind of instrument are we using to measure. Don't define it if you are looking data elsewhere.
+
+  # Optional. Only define it if you set instrument kind. This means that metrics will be measured periodically.
+  # If defined, SolidTelemetry will store this value as a SolidTelemetry::Metric.
+  def measure
+    rand 100
+  end
+
+  # Optional. Only define it if you don't set an instrument kind and want to measure data elsewhere.
+  def self.metric_data(host, time_range, resolution)
+    # ...
+  end
+end
+```
+
+Then, you need to add this class to the `config/initializers/solid_telemetry.rb` file:
+
+```ruby
+SolidTelemetry.configure do |config|
+  # ...
+  config.metrics = {
+    cpu: [SolidTelemetry::Metrics::Cpu],
+    # ...
+    random: [RandomMetric]
+  }
+end
+```
+
+The `metrics` setting must be a hash, where the key is the chart name and the value is an array of metrics that will be shown in that chart.
+
+#### Example
+
+Let's say you want to track how many orders are created in your e-commerce app. You can do it in two different ways. You can store the measured value in the database or lookup the information every time the metrics are displayed. **Be careful**, looking up the data every time the metrics are displayed could slow down the metrics page significantly if they're not efficiently enough.
+
+```ruby
+class OrdersMetric < SolidTelemetry::Metrics::Base
+  name "orders"
+  description "Number of orders created"
+
+  # method 1: instrumented metrics, they're stored in the database
+  instrument_kind :counter
+
+  # by default metrics are recorded every minute, but the behavior can be changed by setting OTEL_METRIC_EXPORT_INTERVAL (in milliseconds)
+  # for this reason, this method counts the orders created in the last minute
+  def measure
+    Order.where(created_at: 1.minute.ago..).count
+  end
+
+  # method 2: lookup the data on the fly
+  def metric_data(host, time_range, resolution)
+    Order.where(created_at: time_range).group_by_minute(:created_at, n: resolution.in_minutes.to_i).count
+  end
 end
 ```
 
