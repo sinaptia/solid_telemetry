@@ -70,7 +70,7 @@ ActiveRecord::Schema[<%= schema_version %>].define(version: 1) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "root_span", default: false
+    t.boolean "root", default: false
     t.index ["name"], name: "index_solid_telemetry_span_names_on_name", unique: true
   end
 

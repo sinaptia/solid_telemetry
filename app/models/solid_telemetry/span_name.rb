@@ -5,6 +5,6 @@ module SolidTelemetry
 
     validates :name, presence: true, uniqueness: true
 
-    scope :roots, -> { where root_span: true }
+    scope :roots, -> { where root: true }
   end
 end
