@@ -14,10 +14,10 @@ module SolidTelemetry
     scope :active_job, -> { where instrumentation_scope_name: "OpenTelemetry::Instrumentation::ActiveJob" }
     scope :rack, -> { where instrumentation_scope_name: "OpenTelemetry::Instrumentation::Rack" }
 
-    scope :successful, -> { where "http_status_code LIKE ?", "2%" }
-    scope :redirection, -> { where "http_status_code LIKE ?", "3%" }
-    scope :client_error, -> { where "http_status_code LIKE ?", "4%" }
-    scope :server_error, -> { where "http_status_code LIKE ?", "5%" }
+    scope :successful, -> { where http_status_code: 200..299 }
+    scope :redirection, -> { where http_status_code: 300..399 }
+    scope :client_error, -> { where http_status_code: 400..499 }
+    scope :server_error, -> { where http_status_code: 500..599 }
 
     delegate :name, to: :span_name
 

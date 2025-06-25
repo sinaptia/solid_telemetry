@@ -32,10 +32,12 @@ class SolidTelemetry::InstallGenerator < Rails::Generators::Base
   end
 
   def virtual_http_status_code
-    if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) || defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
+    if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+      "(span_attributes->>'http.status_code')::INTEGER"
+    elsif defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
       "span_attributes->>'http.status_code'"
     elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
-      "span_attributes->'$.\\\"http.status_code\\\"'"
+      "JSON_VALUE(span_attributes, '$.\\\"http.status_code\\\"' RETURNING DECIMAL)"
     end
   end
 
@@ -43,7 +45,7 @@ class SolidTelemetry::InstallGenerator < Rails::Generators::Base
     if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) || defined?(ActiveRecord::ConnectionAdapters::SQLite3Adapter)
       "instrumentation_scope->>'name'"
     elsif defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
-      "instrumentation_scope->'$.\\\"name\\\"'"
+      "JSON_VALUE(instrumentation_scope, '$.\\\"name\\\"')"
     end
   end
 
