@@ -93,7 +93,7 @@ ActiveRecord::Schema[<%= schema_version %>].define(version: 1) do
     t.json "tracestate"
     t.decimal "duration"
     t.virtual "hostname", type: :string, as: "<%= virtual_hostname %>", stored: true
-    t.virtual "http_status_code", type: :string, as: "<%= virtual_http_status_code %>", stored: true
+    t.virtual "http_status_code", type: :integer, as: "<%= virtual_http_status_code %>", stored: true
     t.virtual "instrumentation_scope_name", type: :string, as: "<%= virtual_instrumentation_scope_name %>", stored: true
     t.index ["hostname"], name: "index_solid_telemetry_spans_on_hostname"
     t.index ["http_status_code"], name: "index_solid_telemetry_spans_on_http_status_code"
