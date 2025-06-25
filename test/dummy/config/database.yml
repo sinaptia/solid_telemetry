@@ -17,8 +17,13 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: storage/test.sqlite3
+  primary:
+    <<: *default
+    database: storage/test.sqlite3
+  telemetry:
+    <<: *default
+    database: storage/telemetry_test.sqlite3
+    migrations_paths: db/telemetry_migrate
 
 
 # SQLite3 write its data on the local filesystem, as such it requires

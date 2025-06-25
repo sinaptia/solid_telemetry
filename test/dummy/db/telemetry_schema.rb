@@ -1,4 +1,4 @@
-ActiveRecord::Schema[<%= schema_version %>].define(version: 1) do
+ActiveRecord::Schema[8.0].define(version: 1) do
   create_table "solid_telemetry_events", force: :cascade do |t|
     t.string "name"
     t.json "event_attributes"
@@ -49,8 +49,8 @@ ActiveRecord::Schema[<%= schema_version %>].define(version: 1) do
     t.string "aggregation_temporality"
     t.datetime "start_time_unix_nano"
     t.datetime "time_unix_nano"
-    t.virtual "hostname", type: :string, as: "<%= virtual_hostname %>", stored: true
-    t.virtual "value", type: :float, as: "<%= virtual_value %>", stored: true
+    t.virtual "hostname", type: :string, as: "resource->>'attributes'->>'host.name'", stored: true
+    t.virtual "value", type: :float, as: "data_points->0->>'value'", stored: true
   end
 
   create_table "solid_telemetry_performance_items", force: :cascade do |t|
@@ -92,9 +92,9 @@ ActiveRecord::Schema[<%= schema_version %>].define(version: 1) do
     t.json "trace_flags"
     t.json "tracestate"
     t.decimal "duration"
-    t.virtual "hostname", type: :string, as: "<%= virtual_hostname %>", stored: true
-    t.virtual "http_status_code", type: :string, as: "<%= virtual_http_status_code %>", stored: true
-    t.virtual "instrumentation_scope_name", type: :string, as: "<%= virtual_instrumentation_scope_name %>", stored: true
+    t.virtual "hostname", type: :string, as: "resource->>'attributes'->>'host.name'", stored: true
+    t.virtual "http_status_code", type: :string, as: "span_attributes->>'http.status_code'", stored: true
+    t.virtual "instrumentation_scope_name", type: :string, as: "instrumentation_scope->>'name'", stored: true
     t.index ["hostname"], name: "index_solid_telemetry_spans_on_hostname"
     t.index ["http_status_code"], name: "index_solid_telemetry_spans_on_http_status_code"
     t.index ["instrumentation_scope_name"], name: "index_solid_telemetry_spans_on_instrumentation_scope_name"
