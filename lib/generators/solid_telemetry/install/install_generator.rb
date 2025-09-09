@@ -2,7 +2,11 @@ class SolidTelemetry::InstallGenerator < Rails::Generators::Base
   source_root File.expand_path("templates", __dir__)
 
   def copy_files
-    template "config/initializers/opentelemetry.rb"
+    if Gem::Version.new(Rack.release) < Gem::Version.new("3.0")
+      template "config/initializers/opentelemetry_rack_2.rb", "config/initializers/opentelemetry.rb"
+    else
+      template "config/initializers/opentelemetry.rb"
+    end
     template "config/initializers/solid_telemetry.rb"
     template "db/telemetry_schema.rb"
   end
