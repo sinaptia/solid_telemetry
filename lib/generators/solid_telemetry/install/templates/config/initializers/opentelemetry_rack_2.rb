@@ -1,8 +1,7 @@
 require "opentelemetry-instrumentation-all"
 require "solid_telemetry/instrumentation/action_pack"
 
-KNOWN_HEADERS = {}
-%w(
+KNOWN_HEADERS = %w[
   Accept-CH
   Accept-Patch
   Accept-Ranges
@@ -78,10 +77,7 @@ KNOWN_HEADERS = {}
   X-UA-Compatible
   X-WebKit-CS
   X-XSS-Protection
-).each do |str|
-  downcased = str.downcase.freeze
-  KNOWN_HEADERS[str] = KNOWN_HEADERS[downcased] = downcased
-end
+].freeze
 
 OpenTelemetry::SDK.configure do |config|
   config.service_name = Rails.application.name
@@ -94,8 +90,8 @@ OpenTelemetry::SDK.configure do |config|
       span_naming: :class
     },
     "OpenTelemetry::Instrumentation::Rack" => {
-      allowed_request_headers: KNOWN_HEADERS.keys,
-      allowed_response_headers: KNOWN_HEADERS.keys,
+      allowed_request_headers: KNOWN_HEADERS,
+      allowed_response_headers: KNOWN_HEADERS,
       untraced_requests: ->(env) {
         env["PATH_INFO"].starts_with?("/telemetry")
       }
