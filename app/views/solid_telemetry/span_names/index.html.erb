@@ -1,0 +1,7 @@
+<%= render "navigation" %>
+
+<%= render "filters" %>
+
+<%= render "table", span_names: @span_names, time_range: @time_range %>
+
+<%= paginate @span_names %>
