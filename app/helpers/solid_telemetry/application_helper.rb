@@ -13,6 +13,14 @@ module SolidTelemetry
       content_tag :span, text, class: "inline-flex items-center rounded-md bg-#{color}-50 px-2 py-1 text-xs font-medium text-#{color}-700 ring-1 ring-inset ring-#{color}-600/10"
     end
 
+    def has_data?(series)
+      series.map { _1[:data] }.flatten.any?
+    end
+
+    def resolution_options
+      {"1 minute" => 1, "10 minutes" => 10, "1 hour" => 60}
+    end
+
     def sort_link(column, title)
       direction = (column.to_s == sort_column && sort_direction == "asc") ? "desc" : "asc"
 

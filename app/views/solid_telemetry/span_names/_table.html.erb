@@ -2,20 +2,20 @@
   <table class="min-w-full divide-y divide-gray-300">
     <thead>
       <tr>
-        <th class="text-left p-3"><%#= sort_link :name, SolidTelemetry::PerformanceItem.human_attribute_name(:name) %></th>
-        <th class="text-left p-3"><%#= sort_link :p50_duration, SolidTelemetry::PerformanceItem.human_attribute_name(:p50_duration) %></th>
-        <th class="text-left p-3"><%#= sort_link :p95_duration, SolidTelemetry::PerformanceItem.human_attribute_name(:p95_duration) %></th>
-        <th class="text-left p-3"><%#= sort_link :p99_duration, SolidTelemetry::PerformanceItem.human_attribute_name(:p99_duration) %></th>
-        <th class="text-left p-3"><%#= sort_link :throughput, SolidTelemetry::PerformanceItem.human_attribute_name(:throughput) %></th>
-        <th class="text-left p-3"><%#= sort_link :impact_score, SolidTelemetry::PerformanceItem.human_attribute_name(:impact_score) %></th>
-        <th class="text-left p-3"><%#= sort_link :error_rate, SolidTelemetry::PerformanceItem.human_attribute_name(:error_rate) %></th>
+        <th class="text-left p-3"><%= sort_link :name, SolidTelemetry::SpanName.human_attribute_name(:name) %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::SpanName.human_attribute_name(:p50_duration) %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::SpanName.human_attribute_name(:p95_duration) %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::SpanName.human_attribute_name(:p99_duration) %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::SpanName.human_attribute_name(:throughput) %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::SpanName.human_attribute_name(:impact_score) %></th>
+        <th class="text-left p-3"><%= SolidTelemetry::SpanName.human_attribute_name(:error_rate) %></th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200">
       <% span_names.each do |span_name| %>
         <tr>
           <td class="p-3">
-            <%= link_to span_name.name, span_name, class: "hover:underline font-semibold" %>
+            <%= link_to span_name.name, span_name_path(span_name, filter_param.tap { _1[:filter][:resolution] = @resolution.in_minutes.to_i }), class: "hover:underline font-semibold" %>
           </td>
           <td class="p-3"><%= span_name.p50_duration(time_range).round 2 %> ms</td>
           <td class="p-3"><%= span_name.p95_duration(time_range).round 2 %> ms</td>

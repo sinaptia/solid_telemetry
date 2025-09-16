@@ -1,4 +1,4 @@
-<%= form_with scope: :filter, url: span_names_path, method: :get, class: "flex mb-10 space-x-4 place-items-end", data: { turbo: false } do |form| %>
+<%= form_with scope: :filter, method: :get, class: "flex mb-10 space-x-4 place-items-end", data: { turbo: false } do |form| %>
   <div>
     <%= form.label :start_at, class: "block font-medium text-gray-900 text-sm/6" %>
     <%= form.datetime_field :start_at, value: filter_param.dig(:filter, :start_at), class: "rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm/6" %>
@@ -7,6 +7,12 @@
     <%= form.label :end_at, class: "block font-medium text-gray-900 text-sm/6" %>
     <%= form.datetime_field :end_at, value: filter_param.dig(:filter, :end_at), class: "rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm/6" %>
   </div>
+  <% if action_name == "show" %>
+    <div>
+      <%= form.label :resolution, class: "block font-medium text-gray-900 text-sm/6" %>
+      <%= form.select :resolution, resolution_options, {selected: filter_param.dig(:filter, :resolution).in_minutes.to_i}, class: "rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm/6" %>
+    </div>
+  <% end %>
   <div>
     <%= form.button t(".filter"), class: "px-3 py-2 text-sm font-semibold text-white rounded-md shadow-sm cursor-pointer bg-sky-600 hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600" %>
   </div>

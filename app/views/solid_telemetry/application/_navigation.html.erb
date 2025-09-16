@@ -3,7 +3,7 @@
     <nav class="-mb-px flex space-x-8">
       <%= link_to t(".metrics"), metrics_path, class: "whitespace-nowrap border-b-2 px-1 py-4 font-medium #{controller_name == "metrics" ? "border-sky-500 text-sky-600" : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"}", data: { turbo: false } %>
       <%= link_to t(".traces"), spans_path, class: "whitespace-nowrap border-b-2 px-1 py-4 font-medium #{controller_name == "spans" ? "border-sky-500 text-sky-600" : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"}" %>
-      <%= link_to t(".performance"), span_names_path, class: "whitespace-nowrap border-b-2 px-1 py-4 font-medium #{controller_name == "performance_items" ? "border-sky-500 text-sky-600" : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"}" %>
+      <%= link_to t(".performance"), span_names_path, class: "whitespace-nowrap border-b-2 px-1 py-4 font-medium #{controller_name == "span_names" ? "border-sky-500 text-sky-600" : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"}" %>
       <%= link_to t(".exceptions"), exceptions_path, class: "whitespace-nowrap border-b-2 px-1 py-4 font-medium #{controller_name == "exceptions" ? "border-sky-500 text-sky-600" : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"}" %>
     </nav>
   </div>

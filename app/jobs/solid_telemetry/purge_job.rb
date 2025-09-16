@@ -11,14 +11,6 @@ module SolidTelemetry
 
       SolidTelemetry::Metric.where("time_unix_nano < ?", time_ago).delete_all
 
-      SolidTelemetry::PerformanceItem.find_each do |item|
-        if item.spans.any?
-          item.touch
-        else
-          item.destroy
-        end
-      end
-
       SolidTelemetry::SpanName.find_each do |span_name|
         span_name.destroy if span_name.spans.none?
       end

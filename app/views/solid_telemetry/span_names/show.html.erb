@@ -1,14 +1,28 @@
 <%= render "navigation" %>
 
+<%= render "filters" %>
+
 <div class="space-y-10">
   <div class="">
     <h2 class="text-xl font-bold"><%= @span_name.name %></h2>
-    <%#= render @span_name %>
+    <%= render @span_name %>
+    <% @metrics.each do |metric| %>
+      <% if has_data?(metric[:series]) %>
+        <div
+          data-controller="chart"
+          data-title="<%= metric[:title] %>"
+          data-min="<%= @start_at.to_i.in_milliseconds %>"
+          data-formatter="<%= metric[:unit] %>"
+          data-series="<%= metric[:series].to_json %>"
+        >
+        </div>
+      <% end %>
+    <% end %>
   </div>
 
   <div class="">
     <h2 class="text-xl font-bold"><%=t ".slowest_traces" %></h2>
     <%= render "solid_telemetry/spans/table", spans: @span_name.spans.order(duration: :desc).page(1).per(5) %>
-    <%= link_to t(".show_all"), spans_path(filter: { name: @span_name.name }, sort: :duration, direction: :desc), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+    <%= link_to t(".show_all"), spans_path(filter_param.merge(span_name_id: @span_name.id), sort: :duration, direction: :desc), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
   </div>
 </div>

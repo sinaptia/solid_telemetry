@@ -53,19 +53,6 @@ ActiveRecord::Schema[8.0].define(version: 1) do
     t.virtual "value", type: :float, as: "data_points->0->>'value'", stored: true
   end
 
-  create_table "solid_telemetry_performance_items", force: :cascade do |t|
-    t.bigint "solid_telemetry_span_name_id"
-    t.decimal "p50_duration"
-    t.decimal "p95_duration"
-    t.decimal "p99_duration"
-    t.decimal "p100_duration"
-    t.integer "throughput"
-    t.decimal "impact_score"
-    t.decimal "error_rate"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "solid_telemetry_span_names", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -108,6 +95,5 @@ ActiveRecord::Schema[8.0].define(version: 1) do
   add_foreign_key "solid_telemetry_events", "solid_telemetry_exceptions"
   add_foreign_key "solid_telemetry_events", "solid_telemetry_spans"
   add_foreign_key "solid_telemetry_links", "solid_telemetry_spans"
-  add_foreign_key "solid_telemetry_performance_items", "solid_telemetry_span_names"
   add_foreign_key "solid_telemetry_spans", "solid_telemetry_span_names"
 end
