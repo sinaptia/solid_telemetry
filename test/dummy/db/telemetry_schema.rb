@@ -58,7 +58,9 @@ ActiveRecord::Schema[8.0].define(version: 1) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "root", default: false
+    t.boolean "hidden", default: false
     t.index ["name"], name: "index_solid_telemetry_span_names_on_name", unique: true
+    t.index ["root", "hidden"], name: "index_solid_telemetry_span_names_on_root_and_hidden"
   end
 
   create_table "solid_telemetry_spans", force: :cascade do |t|
@@ -87,8 +89,10 @@ ActiveRecord::Schema[8.0].define(version: 1) do
     t.index ["instrumentation_scope_name"], name: "index_solid_telemetry_spans_on_instrumentation_scope_name"
     t.index ["parent_span_id", "solid_telemetry_span_name_id"], name: "idx_on_parent_span_id_solid_telemetry_span_name_id_d576cb918b"
     t.index ["parent_span_id"], name: "index_solid_telemetry_spans_on_parent_span_id"
+    t.index ["solid_telemetry_span_name_id"], name: "index_solid_telemetry_spans_on_solid_telemetry_span_name_id"
     t.index ["span_id"], name: "index_solid_telemetry_spans_on_span_id"
     t.index ["start_timestamp"], name: "index_solid_telemetry_spans_on_start_timestamp"
+    t.index ["start_timestamp", "solid_telemetry_span_name_id"], name: "idx_on_start_timestamp_solid_telemetry_span_name_id"
     t.index ["trace_id"], name: "index_solid_telemetry_spans_on_trace_id"
   end
 

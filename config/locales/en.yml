@@ -72,8 +72,6 @@ en:
       filters:
         filter: Filter
       show:
-        show_all: Show all
-        slowest_traces: Slowest traces
         active_job_throughput:
           failed: Failed
           successful: Successful
@@ -83,6 +81,8 @@ en:
           p95: P95
           p99: P99
           title: Response time
+        show_all: Show all
+        slowest_traces: Slowest traces
         throughput:
           client_error: 4xx
           redirection: 3xx
