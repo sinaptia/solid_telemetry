@@ -9,7 +9,7 @@ PATH
       opentelemetry-instrumentation-all (>= 0.66)
       opentelemetry-metrics-sdk (>= 0.2)
       opentelemetry-sdk (>= 1.5)
-      rails (>= 6.0)
+      rails (>= 7.2)
       stimulus-rails
       turbo-rails
       with_recursive_tree
