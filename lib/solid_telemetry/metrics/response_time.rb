@@ -31,8 +31,14 @@ module SolidTelemetry
         end
       end
 
-      def self.metric_data(host, time_range, resolution)
-        Span.by_host(host.name).roots.rack.where(start_timestamp: time_range).group_by_minute(:start_timestamp, n: resolution.in_minutes.to_i)
+      def self.metric_data(host_or_span_name, time_range, resolution)
+        collection = if host_or_span_name.is_a? Host
+          Span.by_host(host_or_span_name.name)
+        elsif host_or_span_name.is_a? SpanName
+          Span.where(span_name: host_or_span_name)
+        end
+
+        collection.roots.rack.where(start_timestamp: time_range).group_by_minute(:start_timestamp, n: resolution.in_minutes.to_i)
       end
     end
   end
