@@ -9,13 +9,6 @@ en:
       solid_telemetry/exception:
         exception_class: Exception class
         message: Message
-      solid_telemetry/performance_item:
-        error_rate: Error rate
-        impact_score: Impact score
-        p50_duration: Duration (P50)
-        p95_duration: Duration (P95)
-        p99_duration: Duration (P99)
-        throughput: Throughput
       solid_telemetry/span:
         duration: Duration
         instrumentation_scope: Instrumentation scope
@@ -75,12 +68,29 @@ en:
           server_error: 5xx
           successful: 2xx
           title: Throughput
-    performance_items:
+    span_names:
+      filters:
+        filter: Filter
       show:
+        active_job_throughput:
+          failed: Failed
+          successful: Successful
+          title: ActiveJob throughput
+        response_time:
+          p50: P50
+          p95: P95
+          p99: P99
+          title: Response time
         show_all: Show all
         slowest_traces: Slowest traces
+        throughput:
+          client_error: 4xx
+          redirection: 3xx
+          server_error: 5xx
+          successful: 2xx
+          title: Throughput
       table:
-        no_performance_items: No span performance insights.
+        no_span_names: No span performance insights.
     spans:
       filters:
         filter: Filter

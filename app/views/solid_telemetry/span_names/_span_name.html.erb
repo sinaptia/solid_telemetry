@@ -1,0 +1,26 @@
+<dl class="divide-y divide-gray-100">
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%= SolidTelemetry::SpanName.human_attribute_name :p50_duration %></dt>
+    <dd class="w-4/5"><%= span_name.p50_duration(@time_range).round 2 %> ms</dd>
+  </div>
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%= SolidTelemetry::SpanName.human_attribute_name :p95_duration %></dt>
+    <dd class="w-4/5"><%= span_name.p95_duration(@time_range).round 2 %> ms</dd>
+  </div>
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%= SolidTelemetry::SpanName.human_attribute_name :p99_duration %></dt>
+    <dd class="w-4/5"><%= span_name.p99_duration(@time_range).round 2 %> ms</dd>
+  </div>
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%= SolidTelemetry::SpanName.human_attribute_name :throughput %></dt>
+    <dd class="w-4/5"><%= span_name.throughput(@time_range) %></dd>
+  </div>
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%= SolidTelemetry::SpanName.human_attribute_name :impact_score %></dt>
+    <dd class="w-4/5"><%= span_name.impact_score(@time_range).round 2 %></dd>
+  </div>
+  <div class="flex px-4 py-6">
+    <dt class="w-1/5 font-semibold"><%= SolidTelemetry::SpanName.human_attribute_name :error_rate %></dt>
+    <dd class="w-4/5"><%= span_name.error_rate(@time_range).round 2 %>%</dd>
+  </div>
+</dl>
