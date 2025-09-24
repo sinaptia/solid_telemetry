@@ -556,7 +556,7 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    with_recursive_tree (0.3.0)
+    with_recursive_tree (0.4.0)
       activerecord (>= 6.0)
       activesupport (>= 6.0)
       railties (>= 6.0)
