@@ -156,6 +156,9 @@ ignore_unused:
   - "solid_telemetry.metrics.index.response_time.*"
   - "solid_telemetry.metrics.index.swap_memory.*"
   - "solid_telemetry.metrics.index.throughput.*"
+  - "solid_telemetry.span_names.show.active_job_throughput.*"
+  - "solid_telemetry.span_names.show.response_time.*"
+  - "solid_telemetry.span_names.show.throughput.*"
 
 ## Exclude these keys from the `i18n-tasks eq-base' report:
 # ignore_eq_base:

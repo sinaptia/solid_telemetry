@@ -4,11 +4,4 @@
 
 <%= render "table", spans: @spans %>
 
-<nav class="flex mb-10 items-center justify-between border-t border-gray-200 px-4 sm:px-0" role="navigation" aria-label="pager">
-  <div class="-mt-px flex w-0 flex-1">
-    <%= link_to_prev_page @spans, t("views.pagination.previous").html_safe, class: "inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" %>
-  </div>
-  <div class="-mt-px flex w-0 flex-1 justify-end">
-    <%= link_to_next_page @spans, t("views.pagination.next").html_safe, class: "inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" %>
-  </div>
-</nav>
+<%= render "countless_pagination", collection: @spans %>
