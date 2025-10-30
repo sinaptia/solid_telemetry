@@ -9,8 +9,6 @@ module SolidTelemetry
     has_many :events, foreign_key: :solid_telemetry_span_id, dependent: :destroy
     has_many :links, foreign_key: :solid_telemetry_span_id, dependent: :destroy
 
-    after_create :touch_performance_item, if: -> { _1.root? && ["OpenTelemetry::Instrumentation::Rack", "OpenTelemetry::Instrumentation::ActiveJob"].include?(_1.instrumentation_scope["name"]) }
-
     scope :active_job, -> { where instrumentation_scope_name: "OpenTelemetry::Instrumentation::ActiveJob" }
     scope :rack, -> { where instrumentation_scope_name: "OpenTelemetry::Instrumentation::Rack" }
 
@@ -20,11 +18,5 @@ module SolidTelemetry
     scope :server_error, -> { where http_status_code: 500..599 }
 
     delegate :name, to: :span_name
-
-    private
-
-    def touch_performance_item
-      PerformanceItem.find_or_create_by(span_name: span_name).touch
-    end
   end
 end
